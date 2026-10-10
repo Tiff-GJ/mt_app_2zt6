@@ -1,186 +1,216 @@
 <!DOCTYPE html>
 <html lang="ja"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="MemoTrip">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>MemoTrip 旅行中</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="MemoTrip"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>MemoTrip</title>
 <style>
 :root{--bg:#fff7e8;--dot:#ffe2b3;--card:#fff;--tx:#33291f;--mu:#8a7a68;--bd:#ffd6a5;--ac:#ff6b9d;--ac2:#fff0f5;--in:#fffdf8}
 @media(prefers-color-scheme:dark){:root{--bg:#1d1a24;--dot:#2a2536;--card:#292433;--tx:#f3eefb;--mu:#a99fbd;--bd:#4a4060;--ac2:#352b45;--in:#211d2a}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%}
-body{color:var(--tx);background:var(--bg) radial-gradient(var(--dot) 1.5px,transparent 1.5px) 0 0/22px 22px;font:16px/1.45 "Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif;padding-top:env(safe-area-inset-top)}
-header{position:sticky;top:0;z-index:5;background:linear-gradient(90deg,#ff6b9d,#ff9f43 55%,#ffd93d);color:#fff;padding:calc(env(safe-area-inset-top) + 8px) 14px 8px;margin-top:calc(env(safe-area-inset-top) * -1);box-shadow:0 3px 0 #0002}
-header b{font-size:18px;text-shadow:2px 2px 0 #0003}header small{display:block;font-size:12px;opacity:.95}
-main{padding:12px 12px calc(86px + env(safe-area-inset-bottom))}
-nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--card);border-top:2px solid var(--bd);padding-bottom:env(safe-area-inset-bottom);z-index:6}
-nav button{flex:1;border:0;background:none;color:var(--mu);font:inherit;font-size:11px;font-weight:bold;padding:8px 0 6px}
-nav button span{display:block;font-size:22px}nav button.on{color:var(--ac)}
-.card{background:var(--card);border:2px solid var(--bd);border-radius:18px;padding:12px 14px;margin-bottom:12px;box-shadow:0 4px 0 var(--bd);border-left:8px solid var(--tc,var(--bd))}
-.card.big{border-color:var(--tc);box-shadow:0 5px 0 var(--tc);border-left-width:2px}
-.lbl{font-size:12px;font-weight:bold;color:#fff;background:var(--tc,var(--ac));display:inline-block;border-radius:99px;padding:1px 10px;margin-bottom:4px}
-.tm{font-size:15px;color:var(--mu);font-weight:bold}
-.ttl{font-size:20px;font-weight:bold}.big .ttl{font-size:24px}
-.cd{font-size:30px;font-weight:bold;color:var(--tc);margin:4px 0}
-.mu{color:var(--mu);font-size:13px}
-.row{display:flex;gap:10px;align-items:center}
-.past{opacity:.5}.now{background:var(--ac2)}
-.day{font-weight:bold;color:var(--ac);margin:14px 4px 6px;font-size:15px}
-button,.btn{font:inherit;font-weight:bold;cursor:pointer;border:2px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;padding:8px 16px;text-decoration:none;display:inline-block;box-shadow:0 2px 0 var(--bd)}
+body{margin:0;color:var(--tx);background:var(--bg) radial-gradient(var(--dot) 1.5px,transparent 1.5px) 0 0/22px 22px;font:15px/1.4 "Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif}
+body.so{padding-bottom:64vh}
+header{position:sticky;top:0;z-index:5;background:linear-gradient(90deg,#ff6b9d,#ff9f43 55%,#ffd93d);color:#fff;padding:calc(env(safe-area-inset-top) + 6px) 12px 8px;box-shadow:0 3px 0 #0002}
+.r{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:4px}
+.d{font-size:15px;font-weight:bold}.c{font-size:44px;font-weight:bold;line-height:1;font-variant-numeric:tabular-nums;text-shadow:2px 2px 0 #0003}
+header button{background:#fff;color:#e8456f;border-color:#fff;padding:4px 10px}header input{width:auto;padding:3px}
+button,.btn{font:inherit;font-weight:bold;border:2px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;padding:7px 14px;text-decoration:none;display:inline-block;box-shadow:0 2px 0 var(--bd)}
 button:active{transform:translateY(2px);box-shadow:none}
-.p{background:var(--ac)!important;color:#fff!important;border-color:var(--ac)!important}
-.q{background:#4d96ff!important;color:#fff!important;border-color:#4d96ff!important}
-.g{background:#2ec4a0!important;color:#fff!important;border-color:#2ec4a0!important}
-textarea,input[type=text],input[type=datetime-local]{font:inherit;width:100%;background:var(--in);color:var(--tx);border:2px solid var(--bd);border-radius:12px;padding:8px}
-textarea{resize:vertical}
-.ng{background:#ff6b6b;color:#fff;border-radius:99px;padding:0 8px;font-size:12px;font-weight:bold}.okb{background:#2ec4a0;color:#fff;border-radius:99px;padding:0 8px;font-size:12px}
-#sh{position:fixed;inset:0;z-index:20;background:var(--bg);overflow-y:auto;padding:calc(env(safe-area-inset-top) + 8px) 12px calc(30px + env(safe-area-inset-bottom));display:none}
-.ph{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.ph img{width:100%;max-width:340px;border-radius:12px;border:2px solid var(--bd)}
-iframe{width:100%;height:300px;border:2px solid var(--bd);border-radius:14px;margin-top:8px}
-table{border-collapse:collapse;width:100%}td{padding:2px 4px;border-top:1px solid var(--bd);font-size:14px}td:last-child{text-align:right}
-.it{border-top:1px dashed var(--bd);padding:8px 0}
-#toast{position:fixed;left:12px;right:12px;bottom:calc(90px + env(safe-area-inset-bottom));background:#2ec4a0;color:#fff;padding:10px 14px;border-radius:14px;font-weight:bold;display:none;z-index:30;white-space:pre-line}
+.p{background:var(--ac)!important;color:#fff!important;border-color:var(--ac)!important}.q{background:#4d96ff!important;color:#fff!important;border-color:#4d96ff!important}
+.mu{color:var(--mu);font-size:12px}.pad{padding:16px}
+table{width:100%;border-collapse:collapse;background:var(--card)}
+tr.dy td{background:var(--ac);color:#fff;font-weight:bold;padding:3px 10px}
+tr.ev td{padding:8px 6px;border-top:1px solid var(--bd);vertical-align:top}
+tr.ev td:first-child{border-left:7px solid var(--tc);width:3.6em;text-align:center;font-variant-numeric:tabular-nums}
+tr.past{opacity:.45}
+tr.cur td,tr.nxt td{padding:18px 6px;font-size:19px;line-height:1.7}
+tr.cur td{background:var(--ac2)}tr.nxt td{background:color-mix(in srgb,var(--tc) 16%,var(--card))}
+.lb{font-size:11px;color:#fff;background:var(--ac);border-radius:99px;padding:1px 8px;margin-right:4px}
+.cdn{font-weight:bold;color:var(--tc)}
+.bg{text-align:right;width:4.2em;font-size:12px}.ng{background:#ff6b6b;color:#fff;border-radius:99px;padding:0 6px}.okb{background:#2ec4a0;color:#fff;border-radius:99px;padding:0 6px}
+#sh{position:fixed;left:0;right:0;bottom:0;height:62vh;z-index:8;background:var(--card);border:2px solid var(--bd);border-radius:20px 20px 0 0;box-shadow:0 -4px 12px #0003;overflow-y:auto;padding:10px 14px calc(16px + env(safe-area-inset-bottom));display:none}
+body.so #sh{display:block}
+#ov{position:fixed;inset:0;z-index:20;background:var(--bg);overflow-y:auto;padding:calc(env(safe-area-inset-top) + 10px) 14px 40px;display:none}#ov.on{display:block}
+label{display:flex;flex-direction:column;font-size:12px;font-weight:bold;color:var(--mu);gap:2px;margin:6px 0}
+input,textarea,select{font:inherit;width:100%;color:var(--tx);background:var(--in);border:2px solid var(--bd);border-radius:10px;padding:6px}
+.g{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.it{border-top:1px dashed var(--bd);padding:8px 0}img,video{max-width:100%;border-radius:10px}
+iframe{width:100%;height:240px;border:2px solid var(--bd);border-radius:12px;margin-top:6px}
+#toast{position:fixed;left:12px;right:12px;top:calc(env(safe-area-inset-top) + 100px);background:#2ec4a0;color:#fff;padding:8px 12px;border-radius:12px;font-weight:bold;display:none;z-index:30;white-space:pre-line}
 </style></head><body>
-<header><b>✈️ MemoTrip</b><small id="hs">旅行中</small></header>
-<main id="m"></main>
-<div id="sh"></div><div id="toast"></div>
-<nav><button data-t="now"><span>⏰</span>いま</button><button data-t="tl"><span>📅</span>旅程</button><button data-t="memo"><span>📝</span>記録</button><button data-t="data"><span>⚙️</span>データ</button></nav>
-<input type="file" id="fm" hidden><input type="file" id="fr" hidden><input type="file" id="fp" accept="image/*" capture="environment" hidden>
+<header><div class="r"><div><div id="cd" class="d"></div><div id="ct" class="c"></div></div><div style="display:flex;flex-direction:column;gap:4px"><button id="rc">📋 記録</button><button id="go">⚙️ データ</button></div></div>
+<div class="r"><button id="md"></button><input type="datetime-local" step="1" id="sim" style="display:none"><button id="nw">🎯 いまへ</button></div></header>
+<main id="m"></main><div id="sh"></div><div id="ov"></div><div id="toast"></div>
+<input type="file" id="fm" hidden><input type="file" id="fr" hidden>
+<input type="file" id="fp" accept="image/*,video/*" multiple hidden>
 <script>
-const TY=["交通","宿泊","飲食","観光","土産他"],TC=["#4d96ff","#9b5de5","#ff6b6b","#2ec4a0","#ffb703"],EM=["🚃","🏨","🍜","📸","🎁"],W="日月火水木金土";
-const $=id=>document.getElementById(id),q=encodeURIComponent,pad=n=>String(n).padStart(2,"0");
-const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const ARROW=/^\s*(.+?)\s*(?:→|->|➡|⇒|⟶)\s*(.+?)\s*$/;
-const yen=n=>"¥"+Math.round(n||0).toLocaleString("ja-JP");
-const uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
-const D=s=>s?new Date(s):null;
-const hm=s=>{const d=D(s);return d?pad(d.getHours())+":"+pad(d.getMinutes()):"--:--"};
-const dl=s=>{const d=D(s);return d?`${d.getMonth()+1}/${d.getDate()}(${W[d.getDay()]})`:"日時未設定"};
-const dkey=s=>s?s.slice(0,10):"";
-/* ---- IndexedDB ---- */
+const TY=["交通","宿泊","飲食","観光","土産他"],TC=["#4d96ff","#9b5de5","#ff6b6b","#2ec4a0","#ffb703"],EM=["🚃","🏨","🍜","📸","🎁"],W="日月火水木金土",KI={memo:"📝",photo:"📷",video:"🎥"};
+const $=i=>document.getElementById(i),q=encodeURIComponent,pad=n=>String(n).padStart(2,"0"),
+esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])),
+ARROW=/^\s*(.+?)\s*(?:→|->|➡|⇒|⟶)\s*(.+?)\s*$/,yen=n=>"¥"+Math.round(n||0).toLocaleString("ja-JP"),
+uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36),D=s=>s?new Date(s):null,
+hm=s=>{const d=D(s);return d?pad(d.getHours())+":"+pad(d.getMinutes()):"--:--"},
+dl=s=>{const d=D(s);return d?`${d.getMonth()+1}/${d.getDate()}(${W[d.getDay()]})`:"日時未設定"},
+lts=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 const dbp=new Promise((res,rej)=>{const r=indexedDB.open("memotrip-ios",1);r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore("trips",{keyPath:"id"});d.createObjectStore("items",{keyPath:"id"}).createIndex("t","tripId")};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
 async function tx(s,m,f){const d=await dbp;return new Promise((res,rej)=>{const t=d.transaction(s,m),r=f(t.objectStore(s));t.oncomplete=()=>res(r&&r.result);t.onerror=()=>rej(t.error)})}
-let trips=[],trip=null,items=[],tab="now",sel=null,fake=null;
-const nowD=()=>fake?new Date(fake):new Date();
-function toast(t){const e=$("toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",5000)}
+let trips=[],trip=null,items=[],sel=null,simOn=false,off=0,lk="",ed=null,tgt=null,rday="";const urls={};
+const now=()=>new Date(Date.now()+(simOn?off:0)),evs=()=>trip?trip.data.events:[];
+const toast=t=>{const e=$("toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",4000)};
+const col=e=>TC[Math.max(0,TY.indexOf(e.type))],em=e=>EM[Math.max(0,TY.indexOf(e.type))];
+const rsv=e=>e.reservation.need==="要"?(e.reservation.status==="済"?'<span class="okb">予約済</span>':'<span class="ng">予約未</span>'):"";
+const cdT=ms=>{let m=Math.max(0,Math.round(ms/6e4));if(m<1)return"まもなく";const d=Math.floor(m/1440),h=Math.floor(m%1440/60);m%=60;return(d?d+"日":"")+(h||d?h+"時間":"")+m+"分"};
+const posUrl=x=>`https://www.google.com/maps/search/?api=1&query=${x.lat},${x.lng}`;
 function normTrip(t){const b=Object.assign({id:uid(),name:"",destination:{},purpose:"",events:[]},t);
- b.destination=Object.assign({prefecture:"",city:"",place:""},t.destination);
- b.events=(t.events||[]).map(e=>{const n=Object.assign({id:uid(),start:"",end:"",durationMin:0,type:"交通",content:"",place:"",expenses:[],myCarKm:0,rentalKm:0,note:""},e);
+ b.events=(t.events||[]).map(e=>{const n=Object.assign({id:uid(),start:"",end:"",durationMin:0,type:"交通",content:"",place:"",expenses:[],note:""},e);
   n.reservation=Object.assign({need:"否",status:""},e.reservation);n.expenses=e.expenses||[];return n});return b}
+const gp=()=>new Promise(r=>navigator.geolocation?navigator.geolocation.getCurrentPosition(p=>r({lat:+p.coords.latitude.toFixed(6),lng:+p.coords.longitude.toFixed(6),acc:Math.round(p.coords.accuracy)}),()=>r(null),{enableHighAccuracy:true,timeout:10000,maximumAge:30000}):r(null));
 async function boot(){
  navigator.storage?.persist?.();
  trips=await tx("trips","readonly",o=>o.getAll())||[];
- const c=localStorage.getItem("cur");trip=trips.find(t=>t.id===c)||trips[0]||null;
- await loadItems();render();
+ trip=trips.find(t=>t.id===localStorage.getItem("cur"))||trips[0]||null;
+ await loadItems();setMd();tick();setInterval(tick,1000);setTimeout(goNow,300);
  if("serviceWorker" in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
 async function loadItems(){items=trip?await tx("items","readonly",o=>o.index("t").getAll(trip.id)):[];items.sort((a,b)=>a.at<b.at?-1:1)}
-const evs=()=>trip?trip.data.events:[];
-const evCol=e=>TC[Math.max(0,TY.indexOf(e.type))],evEm=e=>EM[Math.max(0,TY.indexOf(e.type))];
-function mapUrl(e){const m=e.place.match(ARROW);
- if(m)return`https://www.google.com/maps/dir/?api=1&origin=${q(m[1])}&destination=${q(m[2])}&travelmode=transit`;
- return e.place?`https://www.google.com/maps/search/?api=1&query=${q(e.place)}`:""}
-const rsv=e=>e.reservation.need==="要"?(e.reservation.status==="済"?'<span class="okb">予約済</span>':'<span class="ng">予約 未</span>'):"";
-function cdText(ms){let m=Math.max(0,Math.round(ms/6e4));if(m<1)return"まもなく";const d=Math.floor(m/1440),h=Math.floor(m%1440/60);m%=60;return(d?d+"日":"")+(h||d?h+"時間":"")+m+"分"}
-function card(e,i,cls){return`<div class="card ${cls||""}" style="--tc:${evCol(e)}" data-ev="${e.id}">
- <div class="row"><span class="tm">${hm(e.start)}–${hm(e.end)}</span>${rsv(e)}</div>
- <div class="ttl">${evEm(e)} ${esc(e.content||"(内容なし)")}</div><div class="mu">${esc(e.place)}</div></div>`}
-/* ---- 画面 ---- */
-function vNow(){
- if(!trip)return`<div class="card"><b>旅程データがありません</b><p class="mu">「データ」タブから .mtp を読み込んでください。</p></div>`;
- const t=nowD(),E=evs().filter(e=>e.start),cur=E.filter(e=>D(e.start)<=t&&t<D(e.end||e.start)),nx=E.filter(e=>D(e.start)>t);
- let h=fake?`<div class="card"><span class="ng">時刻シミュレーション中</span> ${fake.replace("T"," ")}</div>`:"";
- if(!E.length)return h+`<div class="card">開始時刻のあるイベントがありません。</div>`;
- const n=nx[0];
- if(cur.length)h+=`<div class="lbl" style="--tc:#ff6b9d">いま</div>`+cur.map(e=>card(e,0,"big now")).join("");
- if(n){h+=`<div class="lbl" style="--tc:#4d96ff">つぎ</div><div class="card big" style="--tc:${evCol(n)}" data-ev="${n.id}">
-  <div class="tm">${dl(n.start)} ${hm(n.start)}–${hm(n.end)} ${rsv(n)}</div>
-  <div class="cd">あと ${cdText(D(n.start)-t)}</div>
-  <div class="ttl">${evEm(n)} ${esc(n.content)}</div><div class="mu">${esc(n.place)}</div>${n.note?`<div class="mu">📌 ${esc(n.note)}</div>`:""}</div>`;
-  if(nx[1])h+=`<div class="mu" style="margin:0 4px 4px">その次</div>`+card(nx[1],0)}
- else if(!cur.length)h+=`<div class="card"><b>🎉 すべてのイベントが終了しました</b></div>`;
- if(!cur.length&&D(E[0].start)>t&&n===E[0])h=`<div class="card"><span class="mu">出発まで</span> <b>${cdText(D(E[0].start)-t)}</b></div>`+h;
- return h}
-function vTl(){
- if(!trip)return vNow();const t=nowD(),ps=[];let last="",h=`<div class="card"><b>${esc(trip.data.name)}</b><div class="mu">${esc([trip.data.destination.prefecture,trip.data.destination.city,trip.data.destination.place].filter(Boolean).join(" "))}<br>🎯 ${esc(trip.data.purpose)}<br>💰 総経費 ${yen(evs().reduce((a,e)=>a+e.expenses.reduce((b,x)=>b+(x.total||0),0),0))}</div></div>`;
- evs().forEach((e,i)=>{const k=dkey(e.start);if(k!==last){h+=`<div class="day">${dl(e.start)}</div>`;last=k}
-  const c=e.start&&D(e.start)<=t&&t<D(e.end||e.start),p=e.end&&D(e.end)<=t;
-  h+=card(e,i,(p?"past ":"")+(c?"now":""))});return h}
-function vMemo(){
- if(!trip)return vNow();if(!items.length)return`<div class="card">まだ記録がありません。イベントを開いてメモ・写真を追加します。</div>`;
- const nm=id=>evs().find(e=>e.id===id)?.content||"";
- return[...items].reverse().map(x=>`<div class="card"><div class="mu">${x.at.replace("T"," ")} ・ ${esc(nm(x.eventId))}</div>${x.kind==="photo"?`<div class="ph"><img src="${x.photo}"></div>`:""}${x.text?`<div>${esc(x.text)}</div>`:""}</div>`).join("")}
-function vData(){
- return`<div class="card"><b>旅程データ(.mtp)</b><p class="mu">OneDriveから「ファイル」アプリ経由で選択します。</p><button class="p" id="bm">📂 .mtp を読み込む</button></div>
- ${trips.length?`<div class="card"><b>読み込み済みの旅</b>${trips.map(t=>`<div class="it row"><div style="flex:1">${esc(t.name||"(無題)")}<div class="mu">${esc(t.mtpFile)}.mtp</div></div>${t.id===trip?.id?'<span class="okb">表示中</span>':`<button data-sw="${t.id}">切替</button>`}<button data-dt="${t.id}">🗑</button></div>`).join("")}</div>`:""}
- ${trip?`<div class="card"><b>メモ・写真(.mtr)</b><p class="mu">${items.length}件 / 出力名: ${esc(trip.mtpFile)}.mtr</p>
- <button class="g" id="bx">📤 .mtr を書き出す</button> <button id="br">📥 .mtr を読み込む</button>
- <p class="mu">書き出し後、共有メニューから「OneDrive」へ保存してください。</p></div>`:""}
- <div class="card"><b>時刻シミュレーション</b><p class="mu">表示の確認用。空にすると実時刻に戻ります。</p><input type="datetime-local" id="fk" value="${fake||""}"></div>`}
-function render(){
- $("hs").textContent=trip?trip.name||trip.mtpFile:"旅程データ未読込";
- document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===tab));
- $("m").innerHTML={now:vNow,tl:vTl,memo:vMemo,data:vData}[tab]();
- if($("sh").style.display==="block")sheet();
-}
+function refresh(){lk="";tick();if(sel)sheet()}
+/* ---- 時計・表 ---- */
+function tick(){const t=now();
+ $("cd").textContent=`${t.getFullYear()}/${pad(t.getMonth()+1)}/${pad(t.getDate())}(${W[t.getDay()]})${simOn?" 🧪":""}`;
+ $("ct").textContent=`${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}`;
+ const k=Math.floor(t/6e4)+"|"+trip?.id;if(k!==lk){lk=k;$("m").innerHTML=vT()}}
+function vT(){
+ if(!trip)return'<p class="mu pad">右上の「データ」から旅程データ(.mtp)を読み込んでください。</p>';
+ const t=now(),E=evs(),nx=E.find(e=>e.start&&D(e.start)>t);let last="",h="";
+ E.forEach(e=>{const k=(e.start||"").slice(0,10);if(k!==last){h+=`<tr class="dy"><td colspan="3">${dl(e.start)}</td></tr>`;last=k}
+  const c=e.start&&D(e.start)<=t&&t<D(e.end||e.start),p=e.end&&D(e.end)<=t,n=nx&&nx.id===e.id,m=items.filter(x=>x.eventId===e.id).length;
+  h+=`<tr class="ev${c?" cur":""}${n?" nxt":""}${p?" past":""}" data-ev="${e.id}" style="--tc:${col(e)}"><td>${hm(e.start)}<br><span class="mu">${hm(e.end)}</span></td>
+  <td>${c?'<span class="lb">いま</span>':n?'<span class="lb" style="background:#4d96ff">つぎ</span>':""}<b>${em(e)} ${esc(e.content)}</b><div class="mu" style="font-size:inherit">${esc(e.place)}</div>${n?`<div class="cdn">あと ${cdT(D(e.start)-t)}</div>`:""}</td>
+  <td class="bg">${rsv(e)}${m?`<div>📎${m}</div>`:""}</td></tr>`});
+ return`<table>${h}</table>`}
+function goNow(){document.querySelector(".cur,.nxt")?.scrollIntoView({block:"center",behavior:"smooth"})}
+function setMd(){$("md").textContent=simOn?"🧪 シミュレーション":"🕒 実時刻";$("sim").style.display=simOn?"":"none"}
+/* ---- 下部ウィンドウ ---- */
 function sheet(){
  const e=evs().find(x=>x.id===sel);if(!e){closeSh();return}
- const its=items.filter(x=>x.eventId===sel),mu=mapUrl(e),tot=e.expenses.reduce((a,x)=>a+(x.total||0),0);
- $("sh").style.display="block";const mp=document.getElementById("mp")?.innerHTML||"";
- $("sh").innerHTML=`<button id="cl">← 戻る</button>
- <div class="card big" style="--tc:${evCol(e)};margin-top:10px"><div class="tm">${dl(e.start)} ${hm(e.start)}–${hm(e.end)} (${Math.floor(e.durationMin/60)}時間${e.durationMin%60}分)</div>
- <div class="ttl">${evEm(e)} ${esc(e.content)}</div><div class="mu">${e.type} ${rsv(e)}</div>
+ document.body.classList.add("so");
+ const its=items.filter(x=>x.eventId===sel),m=e.place.match(ARROW),mp=$("mp")?.innerHTML||"",
+ plan=e.expenses.reduce((a,x)=>a+(x.total||0),0),act=its.reduce((a,x)=>a+(x.expense?.total||0),0);
+ $("sh").innerHTML=`<div style="display:flex;justify-content:space-between;align-items:start"><div><div class="mu">${dl(e.start)} ${hm(e.start)}–${hm(e.end)} ${rsv(e)}</div><b style="font-size:18px">${em(e)} ${esc(e.content)}</b></div><button id="sx">✕</button></div>
  ${e.place?`<div>📍 ${esc(e.place)}</div>`:""}${e.note?`<div>📌 ${esc(e.note)}</div>`:""}
- ${e.myCarKm||e.rentalKm?`<div class="mu">🚗 ${e.myCarKm}km / 🚙 ${e.rentalKm}km</div>`:""}
- ${mu?`<p><button class="q" id="bmap">🗺 地図を表示</button> <a class="btn" href="${mu}" target="_blank">Googleマップで開く</a></p><div id="mp">${mp}</div>`:""}</div>
- ${e.expenses.length?`<div class="card"><b>経費 ${yen(tot)}</b><table>${e.expenses.map(x=>`<tr><td>${esc(x.item)}</td><td>${yen(x.price)}×${x.qty}</td><td>${yen(x.total)}</td></tr>`).join("")}</table></div>`:""}
- <div class="card"><b>📝 メモ・写真</b>
- ${its.map(x=>`<div class="it">${x.kind==="photo"?`<div class="ph"><img src="${x.photo}"></div>`:""}<div>${esc(x.text)}</div><div class="mu">${x.at.replace("T"," ")} <button data-di="${x.id}" style="padding:2px 10px">削除</button></div></div>`).join("")}
- <textarea id="mt" rows="3" placeholder="メモを入力"></textarea>
- <p><button class="p" id="bs">メモを保存</button> <button class="q" id="bp">📷 写真を撮る</button></p></div>`;
+ ${e.place?`<p><button class="q" id="bmap">🗺 地図</button> <a class="btn" target="_blank" href="${m?`https://www.google.com/maps/dir/?api=1&origin=${q(m[1])}&destination=${q(m[2])}&travelmode=transit`:`https://www.google.com/maps/search/?api=1&query=${q(e.place)}`}">Googleマップで開く</a></p><div id="mp">${mp}</div>`:""}
+ <div class="mu">予定経費 ${yen(plan)} / 実費 ${yen(act)}</div>
+ <p><button class="p" data-add="memo">📝 メモ</button> <button class="p" data-add="media">📷🎥 写真・動画を追加</button></p><div class="mu">標準カメラで撮影した写真・動画を選びます(本体は写真アプリに残ります)。選択画面の「オプション」で位置情報を含める設定にしてください。</div>
+ ${its.map(x=>itemHtml(x)).join("")}`;
 }
-function closeSh(){$("sh").style.display="none";sel=null}
-/* ---- 記録の追加 ---- */
-const stamp=()=>{const d=nowD();return`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`};
-async function addItem(x){x=Object.assign({id:uid(),tripId:trip.id,eventId:sel,at:stamp(),text:"",kind:"memo"},x);await tx("items","readwrite",o=>o.put(x));await loadItems();render()}
-async function shrink(f){const b=await createImageBitmap(f,{imageOrientation:"from-image"}),s=Math.min(1,1600/Math.max(b.width,b.height)),c=document.createElement("canvas");
- c.width=Math.round(b.width*s);c.height=Math.round(b.height*s);c.getContext("2d").drawImage(b,0,0,c.width,c.height);return c.toDataURL("image/jpeg",.8)}
-/* ---- 入出力 ---- */
-async function impMtp(f){try{const j=JSON.parse(await f.text());if(!Array.isArray(j.events))throw 0;const d=normTrip(j);
- const t={id:d.id,name:d.name,mtpFile:f.name.replace(/\.[^.]*$/,""),data:d};await tx("trips","readwrite",o=>o.put(t));
- trips=await tx("trips","readonly",o=>o.getAll());trip=t;localStorage.setItem("cur",t.id);await loadItems();tab="now";render();toast("読み込みました: "+(d.name||t.mtpFile))}catch(e){alert("旅程データを読み込めませんでした")}}
+function closeSh(){sel=null;document.body.classList.remove("so");$("sh").style.display="none"}
+/* ---- 記録の追加・編集 ---- */
+const base=k=>({id:uid(),tripId:trip.id,eventId:sel,kind:k,at:lts(new Date()),lat:null,lng:null,acc:null,text:"",expense:null,media:null});
+function openEd(x,isNew,back){ed={x,isNew,back};const m=x.kind==="memo",e=x.expense||{};
+ $("ov").innerHTML=`<h3>${KI[x.kind]} ${{memo:"メモ",photo:"写真",video:"動画"}[x.kind]}${isNew?"の追加":"の編集"}</h3>
+ <label>日時<input type="datetime-local" step="1" id="e_at" value="${x.at}"></label>
+ <label>イベント<select id="e_ev">${evs().map(e=>`<option value="${e.id}"${e.id===x.eventId?" selected":""}>${hm(e.start)} ${esc(e.content)}</option>`).join("")}</select></label>
+ <label>位置(緯度,経度)<input id="e_pos" value="${x.lat!=null?x.lat+","+x.lng:""}" placeholder="取得中…(手入力も可)"></label><button id="ep">📍 現在地を取得</button>
+ <label>${m?"メモ":"説明"}<textarea id="e_tx" rows="3">${esc(x.text)}</textarea></label>
+ ${m?`<b>実費</b><label>品目<input id="e_it" value="${esc(e.item)}"></label><div class="g"><label>単価<input type="number" inputmode="decimal" id="e_pr" value="${e.price??""}"></label><label>数量<input type="number" inputmode="decimal" id="e_qt" value="${e.qty??1}"></label><label>合計<input type="number" inputmode="decimal" id="e_tt" value="${e.total??""}"></label></div><label>備考<input id="e_nt" value="${esc(e.note)}"></label>`:""}
+ <p><button class="p" id="es">保存</button> <button id="ec">キャンセル</button> ${isNew?"":'<button id="edl">削除</button>'}</p>`;
+ $("ov").classList.add("on");if(isNew&&x.lat==null)fillPos(false)}
+async function fillPos(force){const p=await gp();if(!$("e_pos"))return;if(p&&(force||!$("e_pos").value)){$("e_pos").value=p.lat+","+p.lng;ed.x.acc=p.acc}else if(!p&&force)toast("位置を取得できませんでした")}
+async function saveEd(){const x=ed.x,v=i=>$(i)?.value.trim()??"";
+ const a=$("e_at").value;x.at=a?(a.length===16?a+":00":a):x.at;
+ const m=v("e_pos").match(/(-?\d+(?:\.\d+)?)\s*[,，\s]\s*(-?\d+(?:\.\d+)?)/);x.lat=m?+m[1]:null;x.lng=m?+m[2]:null;if(!m)x.acc=null;
+ x.text=$("e_tx").value;x.eventId=$("e_ev").value;
+ if(x.kind==="memo"){const pr=+v("e_pr")||0,qt=v("e_qt")===""?1:+v("e_qt");x.expense=(v("e_it")||pr||v("e_tt"))?{item:v("e_it"),price:pr,qty:qt,total:v("e_tt")===""?pr*qt:+v("e_tt"),note:v("e_nt")}:null}
+ await tx("items","readwrite",o=>o.put(x));await loadItems();refresh();closeOv()}
+const closeOv=()=>{const b=ed?.back;$("ov").classList.remove("on");ed=null;if(b)recView()};
+/* ---- 写真・動画の取り込み(本体は写真アプリ。撮影情報(EXIF等)のみ記録) ---- */
+const autoEv=t=>{const E=evs().filter(e=>e.start);return(E.find(e=>e.start<=t&&t<=(e.end||e.start))||[...E].reverse().find(e=>e.start<=t)||E[0]||{}).id||null};
+function exif(b){try{const u=new Uint8Array(b);let o=-1;
+ for(let i=0,n=Math.min(u.length-8,4e7);i<n;i++)if(u[i]===69&&u[i+1]===120&&u[i+2]===105&&u[i+3]===102&&!u[i+4]&&!u[i+5]&&(u[i+6]===73||u[i+6]===77)&&u[i+7]===u[i+6]){o=i+6;break}
+ if(o<0)return{};
+ const v=new DataView(b),le=u[o]===73,g16=p=>v.getUint16(o+p,le),g32=p=>v.getUint32(o+p,le),
+ ifd=(p,f)=>{const n=g16(p);for(let k=0;k<n;k++){const e=p+2+k*12;f(g16(e),g32(e+4),e+8)}},
+ str=(p,c)=>{let s="";const a=c>4?g32(p):p;for(let i=0;i<c-1;i++)s+=String.fromCharCode(u[o+a+i]);return s},
+ rat=p=>{const a=g32(p);return[0,1,2].map(i=>g32(a+i*8)/g32(a+i*8+4))};
+ let ex=0,gi=0,r={},la,lo,lr,nr;
+ ifd(g32(4),(t,c,p)=>{if(t===0x8769)ex=g32(p);if(t===0x8825)gi=g32(p)});
+ if(ex)ifd(ex,(t,c,p)=>{if(t===0x9003)r.t=str(p,c).replace(/^(\d{4}):(\d\d):(\d\d) /,"$1-$2-$3T")});
+ if(gi)ifd(gi,(t,c,p)=>{if(t===1)lr=str(p,c);if(t===2)la=rat(p);if(t===3)nr=str(p,c);if(t===4)lo=rat(p)});
+ if(la&&lo){const f=a=>a[0]+a[1]/60+a[2]/3600;r.lat=+(f(la)*(lr==="S"?-1:1)).toFixed(6);r.lng=+(f(lo)*(nr==="W"?-1:1)).toFixed(6)}
+ return r}catch(e){return{}}}
+async function vmeta(f){try{const d=new TextDecoder("latin1");let s=d.decode(await f.slice(0,1500000).arrayBuffer());
+ if(f.size>1500000)s+=d.decode(await f.slice(Math.max(1500000,f.size-1500000)).arrayBuffer());
+ const m=s.match(/([+-]\d{1,2}\.\d{2,})([+-]\d{1,3}\.\d{2,})/),t=s.match(/(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d)[+-]\d{4}/);
+ return{lat:m?+m[1]:undefined,lng:m?+m[2]:undefined,t:t?t[1]:undefined}}catch(e){return{}}}
+async function thumb(f){try{const b=await createImageBitmap(f,{imageOrientation:"from-image"}),s=160/Math.max(b.width,b.height),c=document.createElement("canvas");
+ c.width=Math.round(b.width*s);c.height=Math.round(b.height*s);c.getContext("2d").drawImage(b,0,0,c.width,c.height);return c.toDataURL("image/jpeg",.6)}catch(e){return""}}
+async function addMedia(fs){const fl=[...fs];if(!fl.length)return;let n=0,nl=0;toast("読み込み中…");
+ for(const f of fl){const v=f.type.startsWith("video"),mt=v?await vmeta(f):exif(await f.arrayBuffer()),at=mt.t||lts(new Date(f.lastModified||Date.now())),ev=!tgt||tgt==="auto"?autoEv(at):tgt;
+  const th=v?"":await thumb(f);
+  await tx("items","readwrite",o=>o.put({id:uid(),tripId:trip.id,eventId:ev,kind:v?"video":"photo",at,lat:mt.lat??null,lng:mt.lng??null,acc:null,text:"",expense:null,media:{file:f.name,type:f.type,size:f.size,exif:!!mt.t},thumb:th}));
+  n++;if(mt.lat!=null)nl++}
+ await loadItems();refresh();if($("ov").classList.contains("on")&&!ed)recView();toast(`${n}件を追加(位置あり ${nl}件)`+(nl<n?"\n位置のない分は、編集で手入力できます":""))}
+/* ---- 記録の一覧(日付順)と地図 ---- */
+function itemHtml(x,rec,en){const m=x.media;
+ return`<div class="it"><div class="mu">${KI[x.kind]} ${x.at.replace("T"," ")}${en?" ・"+esc(en):""} ${x.lat!=null?`<a href="${posUrl(x)}" target="_blank">📍${x.lat},${x.lng}</a>`:"位置なし"} <button data-ed="${x.id}" style="padding:1px 10px">編集</button>${rec&&x.lat!=null?` <button data-rp="${x.id}" style="padding:1px 10px">地図</button>`:""}</div>
+ ${x.thumb?`<img src="${x.thumb}" style="max-height:110px">`:""}${m?`<div class="mu">${esc(m.file)}(写真アプリ)${m.exif===false?" ※撮影日時の情報なし":""}</div>`:""}
+ ${x.text?`<div>${esc(x.text)}</div>`:""}${x.expense?`<div>💴 ${esc(x.expense.item)} ${yen(x.expense.price)}×${x.expense.qty}=<b>${yen(x.expense.total)}</b> ${esc(x.expense.note)}</div>`:""}</div>`}
+function mapEmbed(p){const c=a=>a.lat+","+a.lng;
+ if(!p.length)return'<p class="mu">位置のある記録がありません。</p>';
+ if(!navigator.onLine)return'<p class="mu">オフラインのため地図は表示できません。</p>';
+ return`<iframe src="https://maps.google.com/maps?${p.length>1?`saddr=${c(p[0])}&daddr=${p.slice(1).map(c).join("+to:")}`:`q=${c(p[0])}`}&output=embed"></iframe>`}
+function recView(){
+ const days=[...new Set(items.map(x=>x.at.slice(0,10)))].sort(),today=lts(now()).slice(0,10);
+ if(!days.includes(rday))rday=days.includes(today)?today:days[0]||"";
+ const L=items.filter(x=>x.at.slice(0,10)===rday),pts=L.filter(x=>x.lat!=null).slice(0,10),nm=id=>evs().find(e=>e.id===id)?.content||"",c=a=>a.lat+","+a.lng;
+ $("ov").innerHTML=`<button id="ec">← 閉じる</button> <button class="p" data-add="auto">📷🎥 取り込み(自動割当)</button>
+ <p class="mu">写真・動画は撮影日時のイベントに自動で割り当てます(編集で変更可)。</p>
+ <div style="margin:8px 0">${days.map(d=>`<button data-day="${d}"${d===rday?' class="p"':""}>${dl(d+"T00:00")}</button>`).join(" ")}</div>
+ <div id="rmap">${mapEmbed(pts)}</div>
+ ${pts.length?`<p><a class="btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=${c(pts[0])}&destination=${c(pts.at(-1))}${pts.length>2?"&waypoints="+pts.slice(1,-1).map(c).join("%7C"):""}">Googleマップで開く(${pts.length}地点)</a></p>`:""}
+ ${L.map(x=>itemHtml(x,true,nm(x.eventId))).join("")||'<p class="mu">この日の記録はありません。</p>'}`;
+ $("ov").classList.add("on")}
+/* ---- データ入出力 ---- */
+function dataView(){$("ov").innerHTML=`<button id="ec">← 閉じる</button><h3>旅程データ(.mtp)</h3><button class="p" id="bm">📂 .mtp を読み込む</button>
+ ${trips.map(t=>`<div class="it">${esc(t.name||"(無題)")} <span class="mu">${esc(t.mtpFile)}.mtp</span> ${t.id===trip?.id?"✅":`<button data-swt="${t.id}">切替</button>`} <button data-dt="${t.id}">🗑</button></div>`).join("")}
+ ${trip?`<h3>メモ・写真・動画(.mtr)</h3><p class="mu">${items.length}件 / 出力名: ${esc(trip.mtpFile)}.mtr<br>写真・動画は写真アプリに残し、撮影日時・位置・ファイル名で紐づけます(.mtr には本体を含みません)。</p>
+ <button class="q" id="bx">📤 .mtr を書き出す</button> <button id="br">📥 .mtr を読み込む</button>`:""}
+ <h3>時刻</h3><p class="mu">画面上部の「実時刻/シミュレーション」ボタンで切り替えます。</p>`;$("ov").classList.add("on")}
+async function impMtp(f){try{const j=JSON.parse(await f.text());if(!Array.isArray(j.events))throw 0;const d=normTrip(j),
+ t={id:d.id,name:d.name,mtpFile:f.name.replace(/\.[^.]*$/,""),data:d};await tx("trips","readwrite",o=>o.put(t));
+ trips=await tx("trips","readonly",o=>o.getAll());trip=t;localStorage.setItem("cur",t.id);await loadItems();closeOv();closeSh();refresh();setTimeout(goNow,300);toast("読み込みました")}catch(e){alert("旅程データを読み込めませんでした")}}
 async function impMtr(f){try{const j=JSON.parse(await f.text());if(!Array.isArray(j.items))throw 0;
- if(j.tripId!==trip.id&&!confirm("この記録は別の旅のものです。それでも取り込みますか?"))return;
- for(const x of j.items)await tx("items","readwrite",o=>o.put(Object.assign({},x,{tripId:trip.id})));await loadItems();render();toast(j.items.length+"件を取り込みました")}catch(e){alert(".mtr を読み込めませんでした")}}
-async function expMtr(){const name=trip.mtpFile+".mtr",txt=JSON.stringify({version:1,tripId:trip.id,tripName:trip.name,mtpFile:trip.mtpFile,savedAt:stamp(),items},null,2);
- const f=new File([txt],name,{type:"application/json"});
- try{if(navigator.canShare?.({files:[f]})){await navigator.share({files:[f]});return}}catch(e){if(e.name==="AbortError")return}
- const a=document.createElement("a");a.href=URL.createObjectURL(f);a.download=name;a.click()}
-/* ---- イベント ---- */
-document.addEventListener("click",async e=>{
- const T=e.target,g=s=>T.closest(s);
- if(g("nav button")){tab=g("nav button").dataset.t;render();scrollTo(0,0);return}
- if(g("[data-ev]")){sel=g("[data-ev]").dataset.ev;sheet();$("sh").scrollTop=0;return}
- const id=T.id;
- if(id==="cl")return closeSh();
+ if(j.tripId!==trip.id&&!confirm("別の旅の記録です。取り込みますか?"))return;
+ for(const x of j.items){const o=items.find(i=>i.id===x.id)||{};await tx("items","readwrite",s=>s.put(Object.assign({},o,x,{tripId:trip.id})))}
+ await loadItems();refresh();dataView();toast(j.items.length+"件を取り込みました")}catch(e){alert(".mtr を読み込めませんでした")}}
+async function shareFiles(fs){try{if(navigator.canShare?.({files:fs})){await navigator.share({files:fs});return}}catch(e){if(e.name==="AbortError")return}
+ fs.forEach(f=>{const a=document.createElement("a");a.href=URL.createObjectURL(f);a.download=f.name;a.click()})}
+document.addEventListener("click",async e=>{const T=e.target,g=s=>T.closest(s),id=T.id;
+ if(g("[data-ev]")&&!g("#sh")){sel=g("[data-ev]").dataset.ev;$("sh").style.display="";sheet();$("sh").scrollTop=0;g("[data-ev]").scrollIntoView({block:"start",behavior:"smooth"});return}
+ if(id==="sx")return closeSh();
  if(id==="bmap"){const ev=evs().find(x=>x.id===sel),m=ev.place.match(ARROW);
   $("mp").innerHTML=navigator.onLine?`<iframe src="https://maps.google.com/maps?${m?`saddr=${q(m[1])}&daddr=${q(m[2])}`:`q=${q(ev.place)}`}&output=embed"></iframe>`:'<p class="mu">オフラインのため地図は表示できません。</p>';return}
- if(id==="bs"){const t=$("mt").value.trim();if(t)addItem({text:t});return}
- if(id==="bp")return $("fp").click();
- if(g("[data-di]")){if(confirm("削除しますか?")){await tx("items","readwrite",o=>o.delete(g("[data-di]").dataset.di));await loadItems();render()}return}
- if(id==="bm")return $("fm").click();
- if(id==="br")return $("fr").click();
- if(id==="bx")return expMtr();
- if(g("[data-sw]")){trip=trips.find(t=>t.id===g("[data-sw]").dataset.sw);localStorage.setItem("cur",trip.id);await loadItems();render();return}
- if(g("[data-dt]")){const k=g("[data-dt]").dataset.dt;if(confirm("この旅と、その旅のメモ・写真を端末から削除します。.mtr を書き出していない場合は失われます。よろしいですか?")){
-  const its=await tx("items","readonly",o=>o.index("t").getAll(k));for(const x of its)await tx("items","readwrite",o=>o.delete(x.id));
-  await tx("trips","readwrite",o=>o.delete(k));trips=trips.filter(t=>t.id!==k);if(trip?.id===k){trip=trips[0]||null;await loadItems()}render()}}
+ if(g("[data-add]")){const k=g("[data-add]").dataset.add;if(k==="memo")openEd(base("memo"),true);else{tgt=k==="auto"?"auto":sel;$("fp").click()}return}
+ if(g("[data-ed]"))return openEd(items.find(x=>x.id===g("[data-ed]").dataset.ed),false,!!g("#ov"));
+ if(id==="es")return saveEd();if(id==="ec")return closeOv();if(id==="ep")return fillPos(true);
+ if(id==="edl"){if(confirm("削除しますか?")){await tx("items","readwrite",o=>o.delete(ed.x.id));await loadItems();refresh();closeOv()}return}
+ if(id==="rc")return recView();
+ if(g("[data-day]")){rday=g("[data-day]").dataset.day;return recView()}
+ if(g("[data-rp]")){$("rmap").innerHTML=mapEmbed([items.find(x=>x.id===g("[data-rp]").dataset.rp)]);$("ov").scrollTop=0;return}
+ if(id==="go")return dataView();
+ if(id==="nw")return goNow();
+ if(id==="md"){simOn=!simOn;if(simOn){off=0;$("sim").value=lts(now())}setMd();refresh();return}
+ if(id==="bm")return $("fm").click();if(id==="br")return $("fr").click();
+ if(id==="bx"){const txt=JSON.stringify({version:2,tripId:trip.id,tripName:trip.name,mtpFile:trip.mtpFile,savedAt:lts(new Date()),items:items.map(({blob,thumb,...r})=>r)},null,2);
+  return shareFiles([new File([txt],trip.mtpFile+".mtr",{type:"application/json"})])}
+ if(g("[data-swt]")){trip=trips.find(t=>t.id===g("[data-swt]").dataset.swt);localStorage.setItem("cur",trip.id);await loadItems();closeSh();refresh();dataView();return}
+ if(g("[data-dt]")){const k=g("[data-dt]").dataset.dt;if(confirm("この旅と、そのメモ・写真・動画を端末から削除します。.mtr と写真・動画を書き出していない場合は失われます。")){
+  for(const x of await tx("items","readonly",o=>o.index("t").getAll(k)))await tx("items","readwrite",o=>o.delete(x.id));
+  await tx("trips","readwrite",o=>o.delete(k));trips=trips.filter(t=>t.id!==k);if(trip?.id===k){trip=trips[0]||null;await loadItems();closeSh()}refresh();dataView()}}
 });
+document.addEventListener("input",e=>{const i=e.target.id;if(i==="e_pr"||i==="e_qt"){const p=+$("e_pr").value||0,n=$("e_qt").value===""?1:+$("e_qt").value;$("e_tt").value=p*n}});
+$("sim").onchange=e=>{const d=new Date(e.target.value);if(!isNaN(d)){off=d-Date.now();refresh()}};
 $("fm").onchange=e=>{const f=e.target.files[0];if(f)impMtp(f);e.target.value=""};
 $("fr").onchange=e=>{const f=e.target.files[0];if(f)impMtr(f);e.target.value=""};
-$("fp").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(f){try{addItem({kind:"photo",photo:await shrink(f),text:$("mt")?.value.trim()||""})}catch(x){alert("写真を保存できませんでした")}}};
-document.addEventListener("change",e=>{if(e.target.id==="fk"){fake=e.target.value||null;render()}});
-setInterval(()=>{if(!fake&&$("sh").style.display!=="block"&&(tab==="now"||tab==="tl"))render()},30000);
+$("fp").onchange=e=>{addMedia(e.target.files);e.target.value=""};
 boot();
 </script></body></html>
