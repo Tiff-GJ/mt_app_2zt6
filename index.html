@@ -29,9 +29,13 @@ tr.cur td{background:var(--ac2)}tr.nxt td{background:color-mix(in srgb,var(--tc)
 .bg{text-align:right;width:4.2em;font-size:12px}.ng{background:#ff6b6b;color:#fff;border-radius:99px;padding:0 6px}.okb{background:#2ec4a0;color:#fff;border-radius:99px;padding:0 6px}
 #sh{position:fixed;left:0;right:0;bottom:0;height:62vh;z-index:8;background:var(--card);border:2px solid var(--bd);border-radius:20px 20px 0 0;box-shadow:0 -4px 12px #0003;overflow-y:auto;padding:10px 14px calc(16px + env(safe-area-inset-bottom));display:none}
 body.so #sh{display:block}
-#ov{position:fixed;inset:0;z-index:20;background:var(--bg);overflow-y:auto;padding:calc(env(safe-area-inset-top) + 10px) 14px 40px;display:none}#ov.on{display:block}
+#ov{position:fixed;inset:0;z-index:20;background:var(--bg);overflow-y:auto;overflow-x:hidden;padding:calc(env(safe-area-inset-top) + 10px) 14px 40px;display:none}#ov.on{display:block}
 label{display:flex;flex-direction:column;font-size:12px;font-weight:bold;color:var(--mu);gap:2px;margin:6px 0}
-input,textarea,select{font:inherit;font-size:16px;width:100%;color:var(--tx);background:var(--in);border:2px solid var(--bd);border-radius:10px;padding:6px}
+input,textarea,select{font:inherit;font-size:16px;min-width:0;max-width:100%;width:100%;color:var(--tx);background:var(--in);border:2px solid var(--bd);border-radius:10px;padding:6px}
+main{padding-bottom:100px}.rw>input{flex:1;width:auto}.g>*{min-width:0}
+#bar{position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;gap:8px;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:var(--card);border-top:2px solid var(--bd)}#bar button{flex:1;padding:6px 2px;font-size:13px;line-height:1.25}#bar button b{display:block;font-size:22px}
+#vw{position:fixed;inset:0;z-index:40;background:#000e;display:none;overflow:auto;padding:calc(env(safe-area-inset-top) + 10px) 12px 30px;color:#fff;text-align:center}#vw.on{display:block}#vw img{max-width:100%;border-radius:8px}body.so #bar{display:none}
+.ps{border-radius:99px;padding:4px 10px;font-weight:bold;font-size:13px;color:#fff;display:inline-block}.ps.busy{background:#8a7a68}.ps.ok{background:#2ec4a0}.ps.none{background:#ff6b6b}
 .fl{font-size:12px;font-weight:bold;color:var(--mu);margin:6px 0 2px}.rw{display:flex;gap:6px;align-items:center}.calw{position:relative}.calw button{pointer-events:none}.calw input{position:absolute;inset:0;opacity:0;width:100%;height:100%}.xr{border:2px solid var(--bd);border-radius:12px;padding:6px;margin:6px 0}
 .g{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
 .it{border-top:1px dashed var(--bd);padding:8px 0}img,video{max-width:100%;border-radius:10px}
@@ -40,7 +44,7 @@ iframe{width:100%;height:240px;border:2px solid var(--bd);border-radius:12px;mar
 </style></head><body>
 <header><div class="r"><div><div id="cd" class="d"></div><div id="ct" class="c"></div></div><div style="display:flex;flex-direction:column;gap:4px"><button id="rc">📋 記録</button><button id="go">⚙️ データ</button></div></div>
 <div class="r"><button id="md"></button><input type="datetime-local" step="1" id="sim" style="display:none"><button id="nw">🎯 いまへ</button></div></header>
-<main id="m"></main><div id="sh"></div><div id="ov"></div><div id="toast"></div>
+<main id="m"></main><div id="bar"><button class="p" id="bn"><b>📝</b>メモを追加</button><button class="q" id="bcam"><b>📷</b>カメラを起動</button><button class="p" id="bpm"><b>🖼</b>写真を取り込む</button></div><div id="sh"></div><div id="ov"></div><div id="vw"></div><div id="toast"></div>
 <input type="file" id="fm" hidden><input type="file" id="fr" hidden>
 <input type="file" id="fp" accept="image/*,video/*" multiple hidden>
 <script>
@@ -100,20 +104,20 @@ function sheet(){
  ${e.place?`<div>📍 ${esc(e.place)}</div>`:""}${e.note?`<div>📌 ${esc(e.note)}</div>`:""}
  ${e.place?`<p><button class="q" id="bmap">🗺 地図</button> <a class="btn" target="_blank" href="${m?`https://www.google.com/maps/dir/?api=1&origin=${q(m[1])}&destination=${q(m[2])}&travelmode=transit`:`https://www.google.com/maps/search/?api=1&query=${q(e.place)}`}">Googleマップで開く</a></p><div id="mp">${mp}</div>`:""}
  <div class="mu">予定経費 ${yen(plan)} / 実費 ${yen(act)}</div>
- <p><button class="p" data-add="memo">📝 メモ</button> <button class="p" data-add="media">📷🎥 写真・動画を追加</button></p><div class="mu">標準カメラで撮影した写真・動画を選びます(本体は写真アプリに残ります)。選択画面の「オプション」で位置情報を含める設定にしてください。</div>
+ <p><button class="p" data-add="memo">📝 メモ</button> <button class="p" data-add="media">🖼 写真・動画を取り込む</button></p><div class="mu">「写真」ライブラリから選びます(本体は写真アプリに残ります)。旅行期間(${trs()})外のものは取り込みません。選択画面の「オプション」で位置情報を含めてください。</div>
  ${its.map(x=>itemHtml(x)).join("")}`;
 }
 function closeSh(){sel=null;document.body.classList.remove("so");$("sh").style.display="none"}
 /* ---- 記録の追加・編集 ---- */
-const base=k=>({id:uid(),tripId:trip.id,eventId:sel,kind:k,at:lts(new Date()),lat:null,lng:null,acc:null,text:"",label:"",place:"",expenses:[],media:null});
+const base=k=>{const at=lts(new Date());return{id:uid(),tripId:trip.id,eventId:sel||autoEv(at),kind:k,at,lat:null,lng:null,acc:null,text:"",label:"",place:"",expenses:[],media:null}};
 const exps=x=>x.expenses||(x.expense?[x.expense]:[]);
 const POS=/(-?\d+(?:\.\d+)?)\s*[,，\s]\s*(-?\d+(?:\.\d+)?)/;
 const fc=v=>{const d=String(v??"").replace(/\D/g,"");return d?(+d).toLocaleString("ja-JP"):""};
 const fdt=s=>{const d=D(s);return d?`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())}(${W[d.getDay()]}) ${pad(d.getHours())}:${pad(d.getMinutes())}`:""};
 const pdt=t=>{const m=t.trim().match(/^(\d{4})[\/\-.](\d{1,2})[\/\-.](\d{1,2})(?:\s*[(（][^)）]*[)）])?\s*(\d{1,2}):(\d{2})$/);if(!m)return null;const d=new Date(+m[1],m[2]-1,+m[3],+m[4],+m[5]);return d.getMonth()!==m[2]-1||d.getHours()!==+m[4]?null:lts(d).slice(0,16)};
 /* 項目(その時点の旅程に関連するものを優先して提示) */
-const LB={交通:[["乗車","s"],["切符購入","s"],["乗換",""],["降車","e"],["車窓・休憩",""],["遅延・運休",""]],宿泊:[["チェックイン","s"],["入浴",""],["夕食",""],["朝食","e"],["チェックアウト","e"]],飲食:[["入店","s"],["注文",""],["食事",""],["会計","e"]],観光:[["到着","s"],["入場","s"],["見学",""],["購入",""],["出発","e"]],土産他:[["購入",""],["配送手配",""]]},
- COM=["目撃","アクシデント","感想","気づき","予定変更","購入","その他"];
+const LB={交通:[["乗車","s"],["出発","s"],["切符購入","s"],["乗換",""],["降車","e"],["到着","e"],["車窓・休憩",""],["遅延・運休",""]],宿泊:[["チェックイン","s"],["入浴",""],["夕食",""],["朝食","e"],["チェックアウト","e"]],飲食:[["入店","s"],["注文",""],["食事",""],["会計","e"]],観光:[["到着","s"],["入場","s"],["見学",""],["購入",""],["出発","e"]],土産他:[["購入",""],["配送手配",""]]},
+ COM=["目撃","アクシデント","感想","気づき","予定変更","購入","出発","到着","撮影","その他"];
 function labels(ev,at){const t=D(at);let hit=[],rest=[];
  if(ev){const s=D(ev.start),en=D(ev.end||ev.start),ns=t&&s&&Math.abs(t-s)<=18e5,ne=t&&en&&Math.abs(t-en)<=18e5;
   const wk=ev.type==="交通"&&/徒歩|歩/.test(ev.content+ev.place);if(wk)hit=["購入","休憩","道順確認"];
@@ -124,31 +128,42 @@ function fillLabels(cur){const ev=evs().find(e=>e.id===$("e_ev").value),{hit,all
  $("e_lb").innerHTML=`<option value="">(未選択)</option>${hit.length?`<optgroup label="この時点の旅程に関連">${hit.map(o).join("")}</optgroup>`:""}<optgroup label="その他">${all.filter(l=>!hit.includes(l)).map(o).join("")}</optgroup>`;
  if(pick&&!all.includes(pick))$("e_lb").insertAdjacentHTML("beforeend",`<option selected>${esc(pick)}</option>`);
  $("e_lb").value=pick}
-const xrow=y=>`<div class="xr"><div class="rw"><input class="xi" placeholder="品目" value="${esc(y.item)}"><button data-xdel="1" style="padding:4px 10px">✕</button></div>
- <div class="g"><label>単価<input class="cm xp" inputmode="numeric" value="${fc(y.price)}"></label><label>数量<input class="cm xq" inputmode="numeric" value="${y.qty==null?"1":fc(y.qty)}"></label><label>合計<input class="cm xt" inputmode="numeric" value="${fc(y.total)}"></label></div>
- <input class="xn" placeholder="備考(この品目)" value="${esc(y.note)}"></div>`;
+const QS=[1,2,3,4,5,6,7,8,9,10];
+function xrow(y){const qv=y.qty==null?1:y.qty,man=!QS.includes(+qv);
+ return`<div class="xr"><div class="rw"><input class="xi" placeholder="品目" value="${esc(y.item)}"><button data-xdel="1" style="padding:4px 10px">✕</button></div>
+ <div class="g"><label>単価<input class="cm xp" inputmode="numeric" value="${fc(y.price)}"></label><label>数量<select class="qs">${QS.map(n=>`<option${+qv===n?" selected":""}>${n}</option>`).join("")}<option${man?" selected":""}>手入力</option></select><input class="cm xq" inputmode="numeric" value="${fc(qv)}" style="display:${man?"":"none"}"></label><label>合計<input class="cm xt" inputmode="numeric" value="${fc(y.total)}"></label></div>
+ <input class="xn" placeholder="備考" value="${esc(y.note)}"></div>`}
+function setPs(st){const e=$("e_ps");if(!e)return;e.className="ps "+st;e.textContent={busy:"⏳ 位置を取得中…",ok:"✅ 位置を取得済み",none:"⚠️ 位置を取得できていません"}[st]}
+function fillPlaces(){const ev=evs().find(e=>e.id===$("e_ev").value),m=ev&&ev.place.match(ARROW),L=[];
+ if(ed.geo)L.push(["現在地付近",ed.geo]);
+ if(m)L.push(["出発地",m[1]],["到着地",m[2]]);else if(ev&&ev.place)L.push(["旅程の場所",ev.place]);
+ $("e_plc").innerHTML='<option value="">場所の候補から選ぶ</option>'+L.map(([k,v])=>`<option value="${esc(v)}">${k}: ${esc(v)}</option>`).join("")}
 function fmtComma(el){const b=el.value.slice(0,el.selectionStart).replace(/\D/g,"").length;el.value=fc(el.value);let c=0,n=0;while(n<el.value.length&&c<b){if(/\d/.test(el.value[n]))c++;n++}el.setSelectionRange(n,n)}
-const exTot=()=>{const t=[...document.querySelectorAll("#e_ex .xt")].reduce((a,i)=>a+(+i.value.replace(/\D/g,"")||0),0);if($("e_xs"))$("e_xs").textContent="実費合計 "+yen(t)};
+const exTot=()=>{const t=[...document.querySelectorAll("#e_ex .xt")].reduce((a,i)=>a+(+i.value.replace(/\D/g,"")||0),0);if($("e_xs"))$("e_xs").textContent=document.querySelector("#e_ex .xr")?"実費合計 "+yen(t):""};
 async function revGeo(la,lo){if(!navigator.onLine)return"";try{const c=new AbortController();setTimeout(()=>c.abort(),6000);
  const j=await(await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&accept-language=ja&lat=${la}&lon=${lo}`,{signal:c.signal})).json();
  return j.name||(j.display_name||"").split(", ").slice(0,2).join(" ")}catch(e){return""}}
 async function autoPlace(){const m=$("e_pos")?.value.match(POS);if(!m)return;const n=await revGeo(m[1],m[2]);
- if(n&&$("e_pl")&&(!$("e_pl").value||$("e_pl").value===ed.ap)){$("e_pl").value=n;ed.ap=n}}
+ if(n&&$("e_pl")){ed.geo=n;fillPlaces();if(!$("e_pl").value||$("e_pl").value===ed.ap){$("e_pl").value=n;ed.ap=n}}}
 function openEd(x,isNew,back){const m=x.kind==="memo",ex=exps(x),ev=evs().find(e=>e.id===x.eventId);ed={x,isNew,back,auto:isNew,ap:""};
  $("ov").innerHTML=`<h3>${KI[x.kind]} ${{memo:"メモ",photo:"写真",video:"動画"}[x.kind]}${isNew?"の追加":"の編集"}</h3>
  <div class="fl">日時</div><div class="rw"><input id="e_at" value="${fdt(x.at)}" placeholder="2026/10/10(土) 16:00"><span class="calw"><button type="button">📅</button><input type="datetime-local" id="e_atc" value="${x.at.slice(0,16)}"></span></div>
  <label>旅程のイベント<select id="e_ev">${evs().map(e=>`<option value="${e.id}"${e.id===x.eventId?" selected":""}>${hm(e.start)} ${esc(e.content)}</option>`).join("")}</select></label>
  <label>項目<select id="e_lb"></select></label>
- <label>位置(緯度,経度)<input id="e_pos" value="${x.lat!=null?x.lat+","+x.lng:""}" placeholder="取得中…(手入力も可)"></label><button id="ep">📍 現在地を取得</button>
- <label>場所<input id="e_pl" value="${esc(x.place||"")}" placeholder="場所名(位置から自動入力)"></label>
+ <input type="hidden" id="e_pos" value="${x.lat!=null?x.lat+","+x.lng:""}">
+ <div class="fl">位置</div><div class="rw" style="flex-wrap:wrap"><span id="e_ps" class="ps"></span><button id="ep">📍 現在地を取得</button></div>
+ <label>場所<input id="e_pl" value="${esc(x.place||"")}" placeholder="場所名(位置から自動入力)"><select id="e_plc" style="margin-top:4px"></select></label>
  <label>${m?"メモ":"説明"}<textarea id="e_tx" rows="3">${esc(x.text)}</textarea></label>
- ${m?`<div class="fl">実費</div><div id="e_ex">${(ex.length?ex:[{}]).map(xrow).join("")}</div><button data-xadd="1">＋ 品目を追加</button> <b id="e_xs"></b>`:""}
+ ${m?`<div class="fl">実費</div><div id="e_ex">${ex.map(xrow).join("")}</div><button data-xadd="1">＋ 品目を追加</button> <b id="e_xs"></b>`:""}
  <p><button class="p" id="es">保存</button> <button id="ec">キャンセル</button> ${isNew?"":'<button id="edl">削除</button>'}</p>`;
  $("ov").classList.add("on");
  if(isNew&&!x.place){const d=ev&&!ARROW.test(ev.place)?ev.place:"";$("e_pl").value=d;ed.ap=d}
- fillLabels(isNew?undefined:x.label||"");exTot();
+ fillLabels(isNew?undefined:x.label||"");fillPlaces();exTot();
+ setPs(x.lat!=null?"ok":isNew?"busy":"none");
  if(isNew&&x.lat==null)fillPos(false);else if(!x.place&&x.lat!=null)autoPlace()}
-async function fillPos(force){const p=await gp();if(!$("e_pos"))return;if(p&&(force||!$("e_pos").value)){$("e_pos").value=p.lat+","+p.lng;ed.x.acc=p.acc;autoPlace()}else if(!p&&force)toast("位置を取得できませんでした")}
+async function fillPos(force){setPs("busy");const p=await gp();if(!$("e_pos"))return;
+ if(p&&(force||!$("e_pos").value)){$("e_pos").value=p.lat+","+p.lng;ed.x.acc=p.acc;setPs("ok");autoPlace()}
+ else{setPs($("e_pos").value?"ok":"none");if(!p&&force)toast("位置を取得できませんでした(以前の位置を残しています)")}}
 async function saveEd(){const x=ed.x,v=i=>$(i)?.value.trim()??"",a=pdt($("e_at").value);
  if(!a)return toast("日時は「2026/10/10(土) 16:00」の形式で入力してください");
  x.at=a===x.at.slice(0,16)?x.at:a+":00";x.eventId=$("e_ev").value;x.label=$("e_lb").value;x.place=v("e_pl");
@@ -177,18 +192,33 @@ async function vmeta(f){try{const d=new TextDecoder("latin1");let s=d.decode(awa
  if(f.size>1500000)s+=d.decode(await f.slice(Math.max(1500000,f.size-1500000)).arrayBuffer());
  const m=s.match(/([+-]\d{1,2}\.\d{2,})([+-]\d{1,3}\.\d{2,})/),t=s.match(/(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d)[+-]\d{4}/);
  return{lat:m?+m[1]:undefined,lng:m?+m[2]:undefined,t:t?t[1]:undefined}}catch(e){return{}}}
-async function thumb(f){try{const b=await createImageBitmap(f,{imageOrientation:"from-image"}),s=160/Math.max(b.width,b.height),c=document.createElement("canvas");
- c.width=Math.round(b.width*s);c.height=Math.round(b.height*s);c.getContext("2d").drawImage(b,0,0,c.width,c.height);return c.toDataURL("image/jpeg",.6)}catch(e){return""}}
-async function addMedia(fs){const fl=[...fs];if(!fl.length)return;let n=0,nl=0;toast("読み込み中…");
- for(const f of fl){const v=f.type.startsWith("video"),mt=v?await vmeta(f):exif(await f.arrayBuffer()),at=mt.t||lts(new Date(f.lastModified||Date.now())),ev=!tgt||tgt==="auto"?autoEv(at):tgt;
-  const th=v?"":await thumb(f);
-  await tx("items","readwrite",o=>o.put({id:uid(),tripId:trip.id,eventId:ev,kind:v?"video":"photo",at,lat:mt.lat??null,lng:mt.lng??null,acc:null,text:"",expense:null,media:{file:f.name,type:f.type,size:f.size,exif:!!mt.t},thumb:th}));
+const tr=()=>{const d=evs().flatMap(e=>[e.start,e.end]).filter(Boolean).map(x=>x.slice(0,10)).sort();return d.length?[d[0],d.at(-1)]:null};
+const trs=()=>{const r=tr();return r?r.map(d=>d.replace(/-/g,"/")).join("〜"):"未設定"};
+const mk=(s,w,h)=>{if(!w||!h)throw 0;const o={};for(const[k,m,q]of[["thumb",160,.6],["prev",1280,.7]]){const r=Math.min(1,m/Math.max(w,h)),c=document.createElement("canvas");c.width=Math.round(w*r);c.height=Math.round(h*r);c.getContext("2d").drawImage(s,0,0,c.width,c.height);o[k]=c.toDataURL("image/jpeg",q)}return o};
+const pimg=async f=>{try{const b=await createImageBitmap(f,{imageOrientation:"from-image"});return mk(b,b.width,b.height)}catch(e){return{}}};
+const vimg=f=>new Promise(res=>{const v=document.createElement("video"),u=URL.createObjectURL(f),t=setTimeout(()=>end({}),6000),end=x=>{clearTimeout(t);URL.revokeObjectURL(u);res(x)};
+ v.muted=true;v.playsInline=true;v.preload="auto";v.src=u;v.onerror=()=>end({});v.onloadeddata=()=>{v.currentTime=0.1};
+ v.onseeked=()=>{try{end(mk(v,v.videoWidth,v.videoHeight))}catch(e){end({})}}});
+async function addMedia(fs){const fl=[...fs];if(!fl.length)return;let n=0,nl=0,out=0,dup=0;const R=tr();toast("読み込み中…");
+ for(const f of fl){const v=f.type.startsWith("video"),mt=v?await vmeta(f):exif(await f.arrayBuffer()),at=mt.t||lts(new Date(f.lastModified||Date.now())),d=at.slice(0,10);
+  if(R&&(d<R[0]||d>R[1])){out++;continue}
+  if(items.some(i=>i.media&&i.media.file===f.name&&i.at===at)){dup++;continue}
+  const ev=!tgt||tgt==="auto"?autoEv(at):tgt,im=v?await vimg(f):await pimg(f);
+  await tx("items","readwrite",o=>o.put({id:uid(),tripId:trip.id,eventId:ev,kind:v?"video":"photo",at,lat:mt.lat??null,lng:mt.lng??null,acc:null,text:"",label:"撮影",place:"",expenses:[],media:{file:f.name,type:f.type,size:f.size,exif:!!mt.t},thumb:im.thumb||"",prev:im.prev||""}));
   n++;if(mt.lat!=null)nl++}
- await loadItems();refresh();if($("ov").classList.contains("on")&&!ed)recView();toast(`${n}件を追加(位置あり ${nl}件)`+(nl<n?"\n位置のない分は、編集で手入力できます":""))}
+ await loadItems();refresh();if($("ov").classList.contains("on")&&!ed)recView();
+ toast(`${n}件を取り込みました(位置あり ${nl}件)`+(out?`\n旅行期間外の${out}件は除外しました`:"")+(dup?`\n取り込み済みの${dup}件は省略しました`:""))}
+function viewer(id){const x=items.find(i=>i.id===id);if(!x)return;const m=x.media||{};
+ $("vw").innerHTML=`<div style="text-align:right"><button id="vwx">✕ 閉じる</button></div>${x.prev||x.thumb?`<img src="${x.prev||x.thumb}">`:`<p>${KI[x.kind]} プレビューなし</p>`}
+ <p>${KI[x.kind]} ${esc(m.file)}<br>${fdt(x.at)}${x.place?"<br>🏷 "+esc(x.place):""}</p>
+ <p><button class="p" id="vwp">🖼 写真アプリを開く</button></p><p style="color:#ccc;font-size:12px">写真アプリでは、撮影日時の写真を探すか、ファイル名で検索してください。<br>(アプリ内の表示は縮小したプレビューです)</p>`;$("vw").classList.add("on")}
+function openCam(){const sc=localStorage.getItem("camsc");let left=false;const f=()=>{if(document.hidden)left=true};document.addEventListener("visibilitychange",f);
+ location.href=sc?`shortcuts://run-shortcut?name=${q(sc)}`:"camera://";
+ setTimeout(()=>{document.removeEventListener("visibilitychange",f);if(!left&&!document.hidden)toast("カメラを起動できませんでした。\nホーム画面・ロック画面・コントロールセンターのカメラから起動してください。\n(⚙️データでショートカットの設定もできます)")},1800)}
 /* ---- 記録の一覧(日付順)と地図 ---- */
 function itemHtml(x,rec,en){const m=x.media;
  return`<div class="it"><div class="mu">${KI[x.kind]} ${fdt(x.at)}${en?" ・"+esc(en):""} ${x.lat!=null?`<a href="${posUrl(x)}" target="_blank">📍${x.lat},${x.lng}</a>`:"位置なし"} <button data-ed="${x.id}" style="padding:1px 10px">編集</button>${rec&&x.lat!=null?` <button data-rp="${x.id}" style="padding:1px 10px">地図</button>`:""}</div>
- ${x.label||x.place?`<div><b>${esc(x.label)}</b> ${x.place?"🏷 "+esc(x.place):""}</div>`:""}${x.thumb?`<img src="${x.thumb}" style="max-height:110px">`:""}${m?`<div class="mu">${esc(m.file)}(写真アプリ)${m.exif===false?" ※撮影日時の情報なし":""}</div>`:""}
+ ${x.label||x.place?`<div><b>${esc(x.label)}</b> ${x.place?"🏷 "+esc(x.place):""}</div>`:""}${x.media?`<div data-vw="${x.id}">${x.thumb?`<img src="${x.thumb}" style="max-height:110px">`:`<span class="mu">${KI[x.kind]} タップで詳細</span>`}</div>`:""}${m?`<div class="mu">${esc(m.file)}(写真アプリ)${m.exif===false?" ※撮影日時の情報なし":""}</div>`:""}
  ${x.text?`<div>${esc(x.text)}</div>`:""}${exps(x).map(y=>`<div>💴 ${esc(y.item)} ${yen(y.price)}×${y.qty}=<b>${yen(y.total)}</b> ${esc(y.note)}</div>`).join("")}</div>`}
 function mapEmbed(p){const c=a=>a.lat+","+a.lng;
  if(!p.length)return'<p class="mu">位置のある記録がありません。</p>';
@@ -198,22 +228,25 @@ function recView(){
  const days=[...new Set(items.map(x=>x.at.slice(0,10)))].sort(),today=lts(now()).slice(0,10);
  if(!days.includes(rday))rday=days.includes(today)?today:days[0]||"";
  const L=items.filter(x=>x.at.slice(0,10)===rday),pts=L.filter(x=>x.lat!=null).slice(0,10),nm=id=>evs().find(e=>e.id===id)?.content||"",c=a=>a.lat+","+a.lng;
- $("ov").innerHTML=`<button id="ec">← 閉じる</button> <button class="p" data-add="auto">📷🎥 取り込み(自動割当)</button>
- <p class="mu">写真・動画は撮影日時のイベントに自動で割り当てます(編集で変更可)。</p>
+ $("ov").innerHTML=`<button id="ec">← 閉じる</button> <button class="p" data-add="auto">🖼 写真・動画を取り込む</button>
+ <p class="mu">旅行期間(${trs()})に撮影した写真・動画だけ取り込み、撮影日時のイベントに自動で割り当てます(編集で変更可)。</p>
  <div style="margin:8px 0">${days.map(d=>`<button data-day="${d}"${d===rday?' class="p"':""}>${dl(d+"T00:00")}</button>`).join(" ")}</div>
  <div id="rmap">${mapEmbed(pts)}</div>
  ${pts.length?`<p><a class="btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=${c(pts[0])}&destination=${c(pts.at(-1))}${pts.length>2?"&waypoints="+pts.slice(1,-1).map(c).join("%7C"):""}">Googleマップで開く(${pts.length}地点)</a></p>`:""}
  ${L.map(x=>itemHtml(x,true,nm(x.eventId))).join("")||'<p class="mu">この日の記録はありません。</p>'}`;
  $("ov").classList.add("on")}
 /* ---- データ入出力 ---- */
-function dataView(){$("ov").innerHTML=`<button id="ec">← 閉じる</button><h3>旅程データ(.mtp)</h3><button class="p" id="bm">📂 .mtp を読み込む</button>
- ${trips.map(t=>`<div class="it">${esc(t.name||"(無題)")} <span class="mu">${esc(t.mtpFile)}.mtp</span> ${t.id===trip?.id?"✅":`<button data-swt="${t.id}">切替</button>`} <button data-dt="${t.id}">🗑</button></div>`).join("")}
- ${trip?`<h3>メモ・写真・動画(.mtr)</h3><p class="mu">${items.length}件 / 出力名: ${esc(trip.mtpFile)}.mtr<br>写真・動画は写真アプリに残し、撮影日時・位置・ファイル名で紐づけます(.mtr には本体を含みません)。</p>
- <button class="q" id="bx">📤 .mtr を書き出す</button> <button id="br">📥 .mtr を読み込む</button>`:""}
- <h3>時刻</h3><p class="mu">画面上部の「実時刻/シミュレーション」ボタンで切り替えます。</p>`;$("ov").classList.add("on")}
-async function impMtp(f){try{const j=JSON.parse(await f.text());if(!Array.isArray(j.events))throw 0;const d=normTrip(j),
- t={id:d.id,name:d.name,mtpFile:f.name.replace(/\.[^.]*$/,""),data:d};await tx("trips","readwrite",o=>o.put(t));
- trips=await tx("trips","readonly",o=>o.getAll());trip=t;localStorage.setItem("cur",t.id);await loadItems();closeOv();closeSh();refresh();setTimeout(goNow,300);toast("読み込みました")}catch(e){alert("旅程データを読み込めませんでした")}}
+function dataView(){$("ov").innerHTML=`<button id="ec">← 閉じる</button><h3>旅行計画(.mtp)</h3>
+ ${trip?`<p class="mu">現在の旅行計画: ${esc(trip.name||trip.mtpFile)}(${esc(trip.mtpFile)}.mtp)</p>`:""}<button class="p" id="bm">→📱 旅行計画を読み込む</button>
+ ${trip?`<h3>旅行結果(.mtr)</h3><p class="mu">${items.length}件 / 出力名: ${esc(trip.mtpFile)}.mtr<br>写真・動画は写真アプリに残し、撮影日時・位置・ファイル名で紐づけます(.mtr には本体を含みません)。</p>
+ <button class="q" id="bx">📱→ 旅行結果を書き出す</button> <button id="br">→📱 旅行結果を読み込む</button>`:""}
+ <h3>カメラの起動(任意)</h3><p class="mu">「カメラを起動」で「カメラ」アプリが開かない場合は、ショートカットアプリで「アプリを開く: カメラ」のショートカットを作り、その名前を入力してください。</p>
+ <input id="camsc" placeholder="ショートカット名" value="${esc(localStorage.getItem("camsc")||"")}" onchange="localStorage.setItem('camsc',this.value.trim())">`;$("ov").classList.add("on")}
+async function impMtp(f){try{const j=JSON.parse(await f.text());if(!Array.isArray(j.events))throw 0;const d=normTrip(j),same=trip&&trip.id===d.id;
+ if(trip&&!same&&items.length&&!confirm(`旅行結果が${items.length}件残っています。\n「旅行結果を書き出す」で書き出し済みですか?\n\nOK: 書き出し済み。古い旅行計画と旅行結果を削除して、新しい旅行計画を読み込みます。\nキャンセル: 読み込みを中止します。`))return;
+ if(!same){await tx("items","readwrite",o=>o.clear());await tx("trips","readwrite",o=>o.clear())}
+ const t={id:d.id,name:d.name,mtpFile:f.name.replace(/\.[^.]*$/,""),data:d};await tx("trips","readwrite",o=>o.put(t));
+ trips=[t];trip=t;localStorage.setItem("cur",t.id);await loadItems();closeOv();closeSh();rday="";refresh();setTimeout(goNow,300);toast(same?"旅行計画を更新しました(旅行結果は残しています)":"読み込みました")}catch(e){alert("旅行計画を読み込めませんでした")}}
 async function impMtr(f){try{const j=JSON.parse(await f.text());if(!Array.isArray(j.items))throw 0;
  if(j.tripId!==trip.id&&!confirm("別の旅の記録です。取り込みますか?"))return;
  for(const x of j.items){const o=items.find(i=>i.id===x.id)||{};await tx("items","readwrite",s=>s.put(Object.assign({},o,x,{tripId:trip.id})))}
@@ -229,8 +262,12 @@ document.addEventListener("click",async e=>{const T=e.target,g=s=>T.closest(s),i
  if(g("[data-ed]"))return openEd(items.find(x=>x.id===g("[data-ed]").dataset.ed),false,!!g("#ov"));
  if(g("[data-xadd]")){$("e_ex").insertAdjacentHTML("beforeend",xrow({}));return}
  if(g("[data-xdel]")){g(".xr").remove();exTot();return}
- if(id==="es")return saveEd();if(id==="ec")return closeOv();if(id==="ep")return fillPos(true);
+ if(id==="es")return saveEd();if(id==="ec")return closeOv();if(id==="ep"){if(confirm("現在の位置を、いまの現在地で上書きします。\n(自動入力された場所名も、更新される場合があります)\n\nよろしいですか?"))fillPos(true);return}
  if(id==="edl"){if(confirm("削除しますか?")){await tx("items","readwrite",o=>o.delete(ed.x.id));await loadItems();refresh();closeOv()}return}
+ if(g("#bar button")){const k=g("#bar button").id;if(k==="bcam")return openCam();if(!trip)return toast("先に旅行計画を読み込んでください");sel=null;if(k==="bn")openEd(base("memo"),true);else{tgt="auto";$("fp").click()}return}
+ if(g("[data-vw]"))return viewer(g("[data-vw]").dataset.vw);
+ if(id==="vwx")return $("vw").classList.remove("on");
+ if(id==="vwp"){location.href="photos-redirect://";return}
  if(id==="rc")return recView();
  if(g("[data-day]")){rday=g("[data-day]").dataset.day;return recView()}
  if(g("[data-rp]")){$("rmap").innerHTML=mapEmbed([items.find(x=>x.id===g("[data-rp]").dataset.rp)]);$("ov").scrollTop=0;return}
@@ -238,19 +275,18 @@ document.addEventListener("click",async e=>{const T=e.target,g=s=>T.closest(s),i
  if(id==="nw")return goNow();
  if(id==="md"){simOn=!simOn;if(simOn){off=0;$("sim").value=lts(now())}setMd();refresh();return}
  if(id==="bm")return $("fm").click();if(id==="br")return $("fr").click();
- if(id==="bx"){const txt=JSON.stringify({version:3,tripId:trip.id,tripName:trip.name,mtpFile:trip.mtpFile,savedAt:lts(new Date()),items:items.map(({blob,thumb,...r})=>r)},null,2);
+ if(id==="bx"){const txt=JSON.stringify({version:3,tripId:trip.id,tripName:trip.name,mtpFile:trip.mtpFile,savedAt:lts(new Date()),items:items.map(({blob,thumb,prev,...r})=>r)},null,2);
   return shareFiles([new File([txt],trip.mtpFile+".mtr",{type:"application/json"})])}
- if(g("[data-swt]")){trip=trips.find(t=>t.id===g("[data-swt]").dataset.swt);localStorage.setItem("cur",trip.id);await loadItems();closeSh();refresh();dataView();return}
- if(g("[data-dt]")){const k=g("[data-dt]").dataset.dt;if(confirm("この旅と、そのメモ・写真・動画を端末から削除します。.mtr と写真・動画を書き出していない場合は失われます。")){
-  for(const x of await tx("items","readonly",o=>o.index("t").getAll(k)))await tx("items","readwrite",o=>o.delete(x.id));
-  await tx("trips","readwrite",o=>o.delete(k));trips=trips.filter(t=>t.id!==k);if(trip?.id===k){trip=trips[0]||null;await loadItems();closeSh()}refresh();dataView()}}
 });
-document.addEventListener("input",e=>{const t=e.target;if(!t.classList.contains("cm"))return;fmtComma(t);const r=t.closest(".xr");
- if(t.classList.contains("xp")||t.classList.contains("xq")){const n=c=>+r.querySelector(c).value.replace(/\D/g,"")||0,q=r.querySelector(".xq").value===""?1:n(".xq");r.querySelector(".xt").value=fc(n(".xp")*q)}exTot()});
-document.addEventListener("change",e=>{const i=e.target.id;if(!ed)return;
- if(i==="e_atc"&&e.target.value)$("e_at").value=fdt(e.target.value);
+const rowTot=r=>{const n=c=>+r.querySelector(c).value.replace(/\D/g,"")||0,q=r.querySelector(".xq").value===""?1:n(".xq");r.querySelector(".xt").value=fc(n(".xp")*q)};
+document.addEventListener("input",e=>{const t=e.target;if(!t.classList.contains("cm"))return;fmtComma(t);if(t.classList.contains("xp")||t.classList.contains("xq"))rowTot(t.closest(".xr"));exTot()});
+document.addEventListener("change",e=>{const t=e.target,i=t.id;if(!ed)return;
+ if(t.classList.contains("qs")){const r=t.closest(".xr"),q=r.querySelector(".xq");if(t.value==="手入力"){q.style.display="";q.focus()}else{q.style.display="none";q.value=t.value;rowTot(r);exTot()}return}
+ if(i==="e_plc"&&t.value){$("e_pl").value=t.value;ed.ap=null;t.value=""}
+ if(i==="e_atc"&&t.value)$("e_at").value=fdt(t.value);
  if(i==="e_lb")ed.auto=false;
- if(i==="e_atc"||i==="e_at"||i==="e_ev")fillLabels()});
+ if(i==="e_atc"||i==="e_at"||i==="e_ev")fillLabels();
+ if(i==="e_ev")fillPlaces()});
 $("sim").onchange=e=>{const d=new Date(e.target.value);if(!isNaN(d)){off=d-Date.now();refresh()}};
 $("fm").onchange=e=>{const f=e.target.files[0];if(f)impMtp(f);e.target.value=""};
 $("fr").onchange=e=>{const f=e.target.files[0];if(f)impMtr(f);e.target.value=""};
