@@ -3,16 +3,26 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="MemoTrip"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MemoTrip</title>
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
-:root{--bg:#fff7e8;--dot:#ffe2b3;--card:#fff;--tx:#33291f;--mu:#8a7a68;--bd:#ffd6a5;--ac:#ff6b9d;--ac2:#fff0f5;--in:#fffdf8}
-@media(prefers-color-scheme:dark){:root{--bg:#1d1a24;--dot:#2a2536;--card:#292433;--tx:#f3eefb;--mu:#a99fbd;--bd:#4a4060;--ac2:#352b45;--in:#211d2a}}
+:root{--card:#fff;--tx:#33291f;--mu:#8a7a68;--hl:#fff176;--ngbg:#ffe0e0;--ro:#f1e8da;
+ --bg:#fff7e8;--bd:#ffd6a5;--ac:#e8590c;--acd:#b8430a;--ac2:#fff1e3;--th:#f08c00;--h1:#c92a2a;--h2:#f76707;--h3:#fcc419;--in:#fffdf8}
+:root[data-season=spring]{--bg:#fff6f9;--bd:#ffcfe0;--ac:#e75480;--acd:#b83a62;--ac2:#fff0f5;--th:#f48fb1;--h1:#ff8fb1;--h2:#ffb7c5;--h3:#a8e063;--in:#fffafc}
+:root[data-season=summer]{--bg:#effaff;--bd:#b9e6f7;--ac:#0f9bd1;--acd:#0a73a0;--ac2:#e3f6fd;--th:#2aa9d6;--h1:#0096c7;--h2:#48cae4;--h3:#ffd166;--in:#f8fdff}
+:root[data-season=winter]{--bg:#f1f6fc;--bd:#c9d8ee;--ac:#4263eb;--acd:#2f49b8;--ac2:#edf2ff;--th:#5c7cfa;--h1:#364fc7;--h2:#74c0fc;--h3:#e7f5ff;--in:#fbfdff}
+@media(prefers-color-scheme:dark){
+:root{--card:#292433;--tx:#f3eefb;--mu:#a99fbd;--hl:#6b5a00;--ngbg:#5a2430;--ro:#2c2739;--in:#211d2a;--bg:#231c16;--bd:#5a4330;--ac2:#3a2a1d}
+:root[data-season=spring]{--bg:#231a20;--bd:#5a3a4a;--ac2:#3a2530}
+:root[data-season=summer]{--bg:#14202a;--bd:#2f4a5c;--ac2:#1d3140}
+:root[data-season=winter]{--bg:#161c28;--bd:#34425e;--ac2:#212b42}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;color:var(--tx);background:var(--bg) radial-gradient(var(--dot) 1.5px,transparent 1.5px) 0 0/22px 22px;font:15px/1.4 "Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif}
+body{margin:0;color:var(--tx);background-color:var(--bg);background-image:var(--pat,none);background-size:260px 260px;font:15px/1.4 "Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif}
 body.so{padding-bottom:64vh}
-header{position:sticky;top:0;z-index:5;background:linear-gradient(90deg,#ff6b9d,#ff9f43 55%,#ffd93d);color:#fff;padding:calc(env(safe-area-inset-top) + 6px) 12px 8px;box-shadow:0 3px 0 #0002}
+header{position:sticky;top:0;z-index:5;background:linear-gradient(90deg,var(--h1),var(--h2) 55%,var(--h3));color:#fff;padding:calc(env(safe-area-inset-top) + 6px) 12px 8px;box-shadow:0 3px 0 #0002}
 .r{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:4px}
-.d{font-size:15px;font-weight:bold}.c{font-size:44px;font-weight:bold;line-height:1;font-variant-numeric:tabular-nums;text-shadow:2px 2px 0 #0003}
-header button{background:#fff;color:#e8456f;border-color:#fff;padding:4px 10px}header input{width:auto;padding:3px}
+.d{font-size:15px;font-weight:bold}.c{font-size:40px;font-weight:bold;line-height:1;font-variant-numeric:tabular-nums;text-shadow:2px 2px 0 #0003}
+header::before{content:"";position:absolute;inset:0;background:var(--patH,none) 0 0/300px 56px;pointer-events:none}header>*{position:relative}
+header button{background:#fff;color:var(--acd);border-color:#fff;padding:4px 10px}header input{width:auto;padding:3px}
 button,.btn{font:inherit;font-weight:bold;border:2px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;padding:7px 14px;text-decoration:none;display:inline-block;box-shadow:0 2px 0 var(--bd)}
 button:active{transform:translateY(2px);box-shadow:none}
 .p{background:var(--ac)!important;color:#fff!important;border-color:var(--ac)!important}.q{background:#4d96ff!important;color:#fff!important;border-color:#4d96ff!important}
@@ -36,14 +46,16 @@ main{padding-bottom:100px}.rw>input{flex:1;width:auto}.g>*{min-width:0}
 #bar{position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;gap:8px;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:var(--card);border-top:2px solid var(--bd)}#bar button{flex:1;padding:6px 2px;font-size:13px;line-height:1.25}#bar button b{display:block;font-size:22px}
 #vw{position:fixed;inset:0;z-index:40;background:#000e;display:none;overflow:auto;padding:calc(env(safe-area-inset-top) + 10px) 12px 30px;color:#fff;text-align:center}#vw.on{display:block}#vw img{max-width:100%;border-radius:8px}body.so #bar{display:none}
 .ps{border-radius:99px;padding:4px 10px;font-weight:bold;font-size:13px;color:#fff;display:inline-block}.ps.busy{background:#8a7a68}.ps.ok{background:#2ec4a0}.ps.none{background:#ff6b6b}
+header button{white-space:nowrap}header .r input{flex:1;min-width:0}tr.cur td.bg,tr.nxt td.bg{font-size:13px;white-space:nowrap}.logo{width:40px;height:40px;border-radius:10px;box-shadow:0 2px 0 #0003}.ic{width:1.05em;height:1.05em;vertical-align:-.15em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sm{background:var(--card);border:2px solid var(--bd);border-radius:14px;padding:8px 12px;margin:10px;box-shadow:0 3px 0 var(--bd)}.dl{display:flex;justify-content:space-between;gap:8px;align-items:center}.dk{font-weight:normal;font-size:12px}
 .fl{font-size:12px;font-weight:bold;color:var(--mu);margin:6px 0 2px}.rw{display:flex;gap:6px;align-items:center}.calw{position:relative}.calw button{pointer-events:none}.calw input{position:absolute;inset:0;opacity:0;width:100%;height:100%}.xr{border:2px solid var(--bd);border-radius:12px;padding:6px;margin:6px 0}
 .g{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
 .it{border-top:1px dashed var(--bd);padding:8px 0}img,video{max-width:100%;border-radius:10px}
 iframe{width:100%;height:240px;border:2px solid var(--bd);border-radius:12px;margin-top:6px}
 #toast{position:fixed;left:12px;right:12px;top:calc(env(safe-area-inset-top) + 100px);background:#2ec4a0;color:#fff;padding:8px 12px;border-radius:12px;font-weight:bold;display:none;z-index:30;white-space:pre-line}
 </style></head><body>
-<header><div class="r"><div><div id="cd" class="d"></div><div id="ct" class="c"></div></div><div style="display:flex;flex-direction:column;gap:4px"><button id="rc">📋 記録</button><button id="go">⚙️ データ</button></div></div>
-<div class="r"><button id="md"></button><input type="datetime-local" step="1" id="sim" style="display:none"><button id="nw">🎯 いまへ</button></div></header>
+<header><div class="r"><div class="rw"><img id="lg" class="logo" alt=""><div><div id="cd" class="d"></div><div id="ct" class="c"></div></div></div><div style="display:flex;flex-direction:column;gap:4px"><button id="rc">📋 記録</button><button id="go">⚙️ データ</button></div></div>
+<div class="r"><button id="md"></button><input type="datetime-local" step="1" id="sim" style="display:none"><button id="nw">🎯 いま</button></div></header>
 <main id="m"></main><div id="bar"><button class="p" id="bn"><b>📝</b>メモを追加</button><button class="q" id="bcam"><b>📷</b>カメラを起動</button><button class="p" id="bpm"><b>🖼</b>写真を取り込む</button></div><div id="sh"></div><div id="ov"></div><div id="vw"></div><div id="toast"></div>
 <input type="file" id="fm" hidden><input type="file" id="fr" hidden>
 <input type="file" id="fp" accept="image/*,video/*" multiple hidden>
@@ -56,20 +68,45 @@ uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36),D=s=>s?new
 hm=s=>{const d=D(s);return d?pad(d.getHours())+":"+pad(d.getMinutes()):"--:--"},
 dl=s=>{const d=D(s);return d?`${d.getMonth()+1}/${d.getDate()}(${W[d.getDay()]})`:"日時未設定"},
 lts=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+const IPX={"train": "<rect x=\"5\" y=\"3\" width=\"14\" height=\"14\" rx=\"3\"/><path d=\"M5 11h14M8 17l-2 4M16 17l2 4\"/><path d=\"M9 14h.01M15 14h.01\"/>", "bed": "<path d=\"M2 4v16\"/><path d=\"M2 8h18a2 2 0 0 1 2 2v10\"/><path d=\"M2 17h20\"/><path d=\"M6 8v9\"/>", "utensils": "<path d=\"M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2\"/><path d=\"M7 2v20\"/><path d=\"M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7\"/>", "camera": "<path d=\"M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z\"/><circle cx=\"12\" cy=\"13\" r=\"3\"/>", "gift": "<rect x=\"3\" y=\"8\" width=\"18\" height=\"4\" rx=\"1\"/><path d=\"M12 8v13\"/><path d=\"M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7\"/><path d=\"M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5\"/>", "car": "<path d=\"M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2\"/><circle cx=\"7\" cy=\"17\" r=\"2\"/><path d=\"M9 17h6\"/><circle cx=\"17\" cy=\"17\" r=\"2\"/>", "carf": "<path d=\"m21 8-2 2-1.5-3.7A2 2 0 0 0 15.6 5H8.4a2 2 0 0 0-1.9 1.3L5 10 3 8\"/><rect x=\"3\" y=\"10\" width=\"18\" height=\"8\" rx=\"2\"/><path d=\"M7 14h.01M17 14h.01M5 18v2M19 18v2\"/>", "yen": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8.5 7.5 12 12l3.5-4.5M12 12v5.5M9 13.5h6M9 16h6\"/>"};
+const IC=n=>`<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${IPX[n]}</svg>`,EMN=["train","bed","utensils","camera","gift"];
+const ICON="data:image/svg+xml,"+encodeURIComponent("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\" width=\"1024\" height=\"1024\"><defs>\n<linearGradient id=\"m\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#e4f9ee\"/><stop offset=\"1\" stop-color=\"#b2e5c9\"/></linearGradient>\n<clipPath id=\"c\"><rect width=\"100\" height=\"100\" rx=\"22\"/></clipPath>\n<mask id=\"k\" maskUnits=\"userSpaceOnUse\" x=\"0\" y=\"0\" width=\"100\" height=\"100\"><rect width=\"100\" height=\"100\" fill=\"#fff\"/><rect x=\"31.1\" y=\"30\" width=\"4.3\" height=\"54\" fill=\"#000\"/><rect x=\"64.7\" y=\"30\" width=\"4.3\" height=\"54\" fill=\"#000\"/></mask></defs>\n<g clip-path=\"url(#c)\"><rect width=\"100\" height=\"100\" fill=\"url(#m)\"/><ellipse cx=\"60\" cy=\"85\" rx=\"23\" ry=\"3.6\" fill=\"#6b7280\" opacity=\".3\"/>\n<g transform=\"translate(10 -5) rotate(-8 50 56) translate(50 55) scale(.82) translate(-50 -55)\">\n<path d=\"M39 34V28.3a4.9 4.9 0 0 1 4.9-4.9H56a4.9 4.9 0 0 1 4.9 4.9V34\" stroke=\"#6b7280\" stroke-width=\"5.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" fill=\"none\" mask=\"url(#k)\"/>\n<rect x=\"16.8\" y=\"32.2\" width=\"66.4\" height=\"48.8\" rx=\"11.7\" fill=\"#6b7280\" mask=\"url(#k)\"/></g>\n<path d=\"M8 40H22\" stroke=\"#6b7280\" stroke-width=\"3.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" fill=\"none\"/><path d=\"M4 52H20\" stroke=\"#6b7280\" stroke-width=\"3.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" fill=\"none\"/><path d=\"M10 64H24\" stroke=\"#6b7280\" stroke-width=\"3.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" fill=\"none\"/></g></svg>");
+/* 季節テーマ: 最初のイベントの開始日(なければ今日)の月で決める。春=3〜5月 夏=6〜8月 秋=9〜11月 冬=12〜2月 */
+const SHAPE={
+ autumn:(c)=>`<polygon fill="${c}" points="-3.6,2.1 -4.5,3.6 -7.1,3.4 -9.1,4.4 -11.7,3.7 -16.6,3.5 -12.2,1.4 -10.1,-0.3 -7.9,-0.2 -5.5,-1.4 -4.2,-0.4 -4.4,0.2 -8.0,0.6 -11.0,-1.6 -14.2,-2.0 -16.6,-5.0 -22.3,-9.0 -15.4,-8.0 -11.6,-8.4 -9.0,-6.4 -5.3,-6.0 -3.0,-3.2 -4.0,-2.1 -8.5,-4.8 -9.9,-9.1 -12.8,-11.6 -13.3,-16.2 -16.2,-24.0 -10.1,-18.4 -6.0,-16.3 -4.7,-12.6 -1.3,-9.6 -0.4,-4.5 -2.4,-4.0 -4.8,-9.6 -3.5,-14.4 -4.6,-18.6 -2.2,-23.0 0.0,-32.0 2.2,-23.0 4.6,-18.6 3.5,-14.4 4.8,-9.6 2.4,-4.0 0.4,-4.5 1.3,-9.6 4.7,-12.6 6.0,-16.3 10.1,-18.4 16.2,-24.0 13.3,-16.2 12.8,-11.6 9.9,-9.1 8.5,-4.8 4.0,-2.1 3.0,-3.2 5.3,-6.0 9.0,-6.4 11.6,-8.4 15.4,-8.0 22.3,-9.0 16.6,-5.0 14.2,-2.0 11.0,-1.6 8.0,0.6 4.4,0.2 4.2,-0.4 5.5,-1.4 7.9,-0.2 10.1,-0.3 12.2,1.4 16.6,3.5 11.7,3.7 9.1,4.4 7.1,3.4 4.5,3.6 3.6,2.1"/><circle r="4.5" fill="${c}"/><path d="M0 4v18" stroke="${c}" stroke-width="2" stroke-linecap="round" fill="none"/>`,
+ spring:(c)=>[0,72,144,216,288].map(a=>`<ellipse fill="${c}" cx="0" cy="-9" rx="6" ry="9" transform="rotate(${a})"/>`).join("")+`<circle r="3" fill="#fff"/>`,
+ summer:(c,i)=>i%2?`<path d="M-18 0q4.5-7 9 0t9 0 9 0 9 0M-18 7q4.5-7 9 0t9 0 9 0 9 0" stroke="${i%4==1?'#0096c7':'#48cae4'}" stroke-width="2.5" stroke-linecap="round" fill="none"/>`
+  :`<circle r="8" fill="${c}"/>`+[0,45,90,135,180,225,270,315].map(a=>`<path d="M0-12v-6" stroke="${c}" stroke-width="2.5" stroke-linecap="round" transform="rotate(${a})"/>`).join(""),
+ winter:(c)=>[0,60,120].map(a=>`<path d="M0-17v34M-4-12l4 4 4-4M-4 12l4-4 4 4" stroke="${c}" stroke-width="2" stroke-linecap="round" fill="none" transform="rotate(${a})"/>`).join("")};
+const SCOL={autumn:["#e8590c","#c92a2a","#f08c00"],spring:["#ff8fb1","#f783ac","#ffb3c6"],summer:["#ffb703","#0096c7","#48cae4"],winter:["#5c7cfa","#74c0fc","#4263eb"]};
+const SPOS=[[40,50,20,1],[150,32,-35,.85],[225,115,60,1.1],[95,150,-70,.9],[190,218,15,.8],[28,225,45,.75]];
+const HPOS=[[26,28,20,.55],[92,22,-35,.5],[160,32,60,.6],[228,24,-70,.5],[276,34,15,.55]];
+const seasonOf=s=>{const m=(s?new Date(s):new Date()).getMonth()+1;return m>=3&&m<=5?"spring":m>=6&&m<=8?"summer":m>=9&&m<=11?"autumn":"winter"};
+let curSeason="";
+function applySeason(d0){
+ const k=seasonOf(d0);if(k===curSeason)return;curSeason=k;
+ const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="260" height="260" opacity=".16">`+SPOS.map(([x,y,r,z],i)=>`<g transform="translate(${x} ${y}) rotate(${r}) scale(${z})">${SHAPE[k](SCOL[k][i%3],i)}</g>`).join("")+`</svg>`;
+ /* タイトルバー用: 白の淡いイラスト(幅300×高さ56でくり返し) */
+ const hs=`<svg xmlns="http://www.w3.org/2000/svg" width="300" height="56" opacity=".3">`+HPOS.map(([x,y,r,z],i)=>`<g transform="translate(${x} ${y}) rotate(${r}) scale(${z})">${SHAPE[k](SCOL[k][i%3],i).replace(/#[0-9a-fA-F]{6}/g,"#fff")}</g>`).join("")+`</svg>`;
+ document.documentElement.style.setProperty("--patH",`url("data:image/svg+xml,${encodeURIComponent(hs)}")`);
+ document.documentElement.dataset.season=k;
+ document.documentElement.style.setProperty("--pat",`url("data:image/svg+xml,${encodeURIComponent(svg)}")`);
+}
 const dbp=new Promise((res,rej)=>{const r=indexedDB.open("memotrip-ios",1);r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore("trips",{keyPath:"id"});d.createObjectStore("items",{keyPath:"id"}).createIndex("t","tripId")};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
 async function tx(s,m,f){const d=await dbp;return new Promise((res,rej)=>{const t=d.transaction(s,m),r=f(t.objectStore(s));t.oncomplete=()=>res(r&&r.result);t.onerror=()=>rej(t.error)})}
 let trips=[],trip=null,items=[],sel=null,simOn=false,off=0,lk="",ed=null,tgt=null,rday="";const urls={};
 const now=()=>new Date(Date.now()+(simOn?off:0)),evs=()=>trip?trip.data.events:[];
 const toast=t=>{const e=$("toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",4000)};
-const col=e=>TC[Math.max(0,TY.indexOf(e.type))],em=e=>EM[Math.max(0,TY.indexOf(e.type))];
+const col=e=>TC[Math.max(0,TY.indexOf(e.type))],em=e=>IC(EMN[Math.max(0,TY.indexOf(e.type))]),sumX=e=>e.expenses.reduce((a,x)=>a+(x.total||0),0);
 const rsv=e=>e.reservation.need==="要"?(e.reservation.status==="済"?'<span class="okb">予約済</span>':'<span class="ng">予約未</span>'):"";
 const cdT=ms=>{let m=Math.max(0,Math.round(ms/6e4));if(m<1)return"まもなく";const d=Math.floor(m/1440),h=Math.floor(m%1440/60);m%=60;return(d?d+"日":"")+(h||d?h+"時間":"")+m+"分"};
 const posUrl=x=>`https://www.google.com/maps/search/?api=1&query=${x.lat},${x.lng}`;
-function normTrip(t){const b=Object.assign({id:uid(),name:"",destination:{},purpose:"",events:[]},t);
- b.events=(t.events||[]).map(e=>{const n=Object.assign({id:uid(),start:"",end:"",durationMin:0,type:"交通",content:"",place:"",expenses:[],note:""},e);
+function normTrip(t){const b=Object.assign({id:uid(),name:"",destination:{},purpose:"",useMyCar:false,useRentalCar:false,events:[]},t);
+ b.events=(t.events||[]).map(e=>{const n=Object.assign({id:uid(),start:"",end:"",durationMin:0,type:"交通",content:"",place:"",expenses:[],myCarKm:0,rentalKm:0,note:""},e);
   n.reservation=Object.assign({need:"否",status:""},e.reservation);n.expenses=e.expenses||[];return n});return b}
 const gp=()=>new Promise(r=>navigator.geolocation?navigator.geolocation.getCurrentPosition(p=>r({lat:+p.coords.latitude.toFixed(6),lng:+p.coords.longitude.toFixed(6),acc:Math.round(p.coords.accuracy)}),()=>r(null),{enableHighAccuracy:true,timeout:10000,maximumAge:30000}):r(null));
 async function boot(){
+ $("lg").src=ICON;{const l=document.createElement("link");l.rel="icon";l.href=ICON;document.head.appendChild(l)}
  navigator.storage?.persist?.();
  trips=await tx("trips","readonly",o=>o.getAll())||[];
  trip=trips.find(t=>t.id===localStorage.getItem("cur"))||trips[0]||null;
@@ -83,17 +120,23 @@ function tick(){const t=now();
  $("cd").textContent=`${t.getFullYear()}/${pad(t.getMonth()+1)}/${pad(t.getDate())}(${W[t.getDay()]})${simOn?" 🧪":""}`;
  $("ct").textContent=`${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}`;
  const k=Math.floor(t/6e4)+"|"+trip?.id;if(k!==lk){lk=k;$("m").innerHTML=vT()}}
-function vT(){
- if(!trip)return'<p class="mu pad">右上の「データ」から旅程データ(.mtp)を読み込んでください。</p>';
- const t=now(),E=evs(),nx=E.find(e=>e.start&&D(e.start)>t);let last="",h="";
- E.forEach(e=>{const k=(e.start||"").slice(0,10);if(k!==last){h+=`<tr class="dy"><td colspan="3">${dl(e.start)}</td></tr>`;last=k}
+function vT(){applySeason(evs().map(e=>e.start).find(Boolean));
+ if(!trip)return'<p class="mu pad">右上の「データ」から旅行計画(.mtp)を読み込んでください。</p>';
+ const t=now(),E=evs(),U=trip.data,nx=E.find(e=>e.start&&D(e.start)>t),d0=(E.map(e=>e.start).find(Boolean)||"").slice(0,10),G=[],gi=[];let pk="";
+ E.forEach((e,i)=>{const k=e.start?e.start.slice(0,10):pk;if(i===0||k!==pk)G.push({k,cost:0,act:0,my:0,re:0});pk=k;const g=G.at(-1);
+  g.cost+=sumX(e);g.my+=+e.myCarKm||0;g.re+=+e.rentalKm||0;g.act+=items.filter(x=>x.eventId===e.id).reduce((a,x)=>a+exps(x).reduce((b,y)=>b+(y.total||0),0),0);gi[i]=G.length-1});
+ const by=TY.map(ty=>E.filter(e=>e.type===ty).reduce((a,e)=>a+sumX(e),0)),my=G.reduce((a,g)=>a+g.my,0),re=G.reduce((a,g)=>a+g.re,0),dst=[U.destination.prefecture,U.destination.city,U.destination.place].filter(Boolean).join(" ");
+ let h=`<div class="sm"><b>${esc(U.name||trip.mtpFile)}</b><div class="mu">${esc(dst)}${U.purpose?" ・ "+esc(U.purpose):""}</div><div>${IC("yen")} 総経費 <b>${yen(by.reduce((a,b)=>a+b,0))}</b>${U.useMyCar?` ${IC("car")}${my}km`:""}${U.useRentalCar?` ${IC("carf")}${re}km`:""}</div><div class="mu">${TY.map((ty,k)=>by[k]?`${IC(EMN[k])} ${yen(by[k])}`:"").filter(Boolean).join(" ")}</div></div><table>`;
+ E.forEach((e,i)=>{
+  if(i===0||gi[i]!==gi[i-1]){const g=G[gi[i]],dn=d0&&g.k?Math.round((new Date(g.k+"T00:00")-new Date(d0+"T00:00"))/864e5)+1:0;
+   h+=`<tr class="dy"><td colspan="3"><div class="dl"><span>${g.k?`${dn>0?dn+"日目 ":""}${dl(g.k+"T00:00")}`:"日付未設定"}</span><span class="dk">日計 ${yen(g.cost)}${g.act?` (実費 ${yen(g.act)})`:""}${U.useMyCar?` ${IC("car")}${g.my}km`:""}${U.useRentalCar?` ${IC("carf")}${g.re}km`:""}</span></div></td></tr>`}
   const c=e.start&&D(e.start)<=t&&t<D(e.end||e.start),p=e.end&&D(e.end)<=t,n=nx&&nx.id===e.id,m=items.filter(x=>x.eventId===e.id).length;
   h+=`<tr class="ev${c?" cur":""}${n?" nxt":""}${p?" past":""}" data-ev="${e.id}" style="--tc:${col(e)}"><td>${hm(e.start)}<br><span class="mu">${hm(e.end)}</span></td>
   <td>${c?'<span class="lb">いま</span>':n?'<span class="lb" style="background:#4d96ff">つぎ</span>':""}<b>${em(e)} ${esc(e.content)}</b><div class="mu" style="font-size:inherit">${esc(e.place)}</div>${n?`<div class="cdn">あと ${cdT(D(e.start)-t)}</div>`:""}</td>
   <td class="bg">${rsv(e)}${m?`<div>📎${m}</div>`:""}</td></tr>`});
- return`<table>${h}</table>`}
+ return h+"</table>"}
 function goNow(){document.querySelector(".cur,.nxt")?.scrollIntoView({block:"center",behavior:"smooth"})}
-function setMd(){$("md").textContent=simOn?"🧪 シミュレーション":"🕒 実時刻";$("sim").style.display=simOn?"":"none"}
+function setMd(){$("md").textContent=simOn?"🧪 模擬時刻":"🕒 実時刻";$("sim").style.display=simOn?"":"none"}
 /* ---- 下部ウィンドウ ---- */
 function sheet(){
  const e=evs().find(x=>x.id===sel);if(!e){closeSh();return}
@@ -103,7 +146,8 @@ function sheet(){
  $("sh").innerHTML=`<div style="display:flex;justify-content:space-between;align-items:start"><div><div class="mu">${dl(e.start)} ${hm(e.start)}–${hm(e.end)} ${rsv(e)}</div><b style="font-size:18px">${em(e)} ${esc(e.content)}</b></div><button id="sx">✕</button></div>
  ${e.place?`<div>📍 ${esc(e.place)}</div>`:""}${e.note?`<div>📌 ${esc(e.note)}</div>`:""}
  ${e.place?`<p><button class="q" id="bmap">🗺 地図</button> <a class="btn" target="_blank" href="${m?`https://www.google.com/maps/dir/?api=1&origin=${q(m[1])}&destination=${q(m[2])}&travelmode=transit`:`https://www.google.com/maps/search/?api=1&query=${q(e.place)}`}">Googleマップで開く</a></p><div id="mp">${mp}</div>`:""}
- <div class="mu">予定経費 ${yen(plan)} / 実費 ${yen(act)}</div>
+ ${trip.data.useMyCar&&e.myCarKm?`<div class="mu">${IC("car")} マイカー ${e.myCarKm}km</div>`:""}${trip.data.useRentalCar&&e.rentalKm?`<div class="mu">${IC("carf")} レンタカー ${e.rentalKm}km</div>`:""}
+ <div class="mu">${IC("yen")} 予定経費 ${yen(plan)} / 実費 ${yen(act)}</div>${e.expenses.map(x=>`<div class="mu">・${esc(x.item)} ${yen(x.price)}×${x.qty}=${yen(x.total)}${x.note?"("+esc(x.note)+")":""}</div>`).join("")}
  <p><button class="p" data-add="memo">📝 メモ</button> <button class="p" data-add="media">🖼 写真・動画を取り込む</button></p><div class="mu">「写真」ライブラリから選びます(本体は写真アプリに残ります)。旅行期間(${trs()})外のものは取り込みません。選択画面の「オプション」で位置情報を含めてください。</div>
  ${its.map(x=>itemHtml(x)).join("")}`;
 }
@@ -242,7 +286,7 @@ function dataView(){$("ov").innerHTML=`<button id="ec">← 閉じる</button><h3
  <button class="q" id="bx">📱→ 旅行結果を書き出す</button> <button id="br">→📱 旅行結果を読み込む</button>`:""}
  <h3>カメラの起動(任意)</h3><p class="mu">「カメラを起動」で「カメラ」アプリが開かない場合は、ショートカットアプリで「アプリを開く: カメラ」のショートカットを作り、その名前を入力してください。</p>
  <input id="camsc" placeholder="ショートカット名" value="${esc(localStorage.getItem("camsc")||"")}" onchange="localStorage.setItem('camsc',this.value.trim())">`;$("ov").classList.add("on")}
-async function impMtp(f){try{const j=JSON.parse(await f.text());if(!Array.isArray(j.events))throw 0;const d=normTrip(j),same=trip&&trip.id===d.id;
+async function impMtp(f){try{const j=JSON.parse(await f.text());if(!Array.isArray(j.events))throw 0;if(j.version!==4&&!confirm(`この旅行計画は version ${j.version??"不明"} です(対応は version 4)。読み込みを続けますか?`))return;const d=normTrip(j),same=trip&&trip.id===d.id;
  if(trip&&!same&&items.length&&!confirm(`旅行結果が${items.length}件残っています。\n「旅行結果を書き出す」で書き出し済みですか?\n\nOK: 書き出し済み。古い旅行計画と旅行結果を削除して、新しい旅行計画を読み込みます。\nキャンセル: 読み込みを中止します。`))return;
  if(!same){await tx("items","readwrite",o=>o.clear());await tx("trips","readwrite",o=>o.clear())}
  const t={id:d.id,name:d.name,mtpFile:f.name.replace(/\.[^.]*$/,""),data:d};await tx("trips","readwrite",o=>o.put(t));
